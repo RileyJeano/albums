@@ -106,4 +106,14 @@ public class ApiController {
 		album = albumRepo.save(album);
 	}
 
+	@PostMapping("/api/artists/{artistId}/albums/{albumId}/songs/add")
+	public void addSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		JSONObject json = new JSONObject(content);
+
+		Song song = new Song();
+	}
+
 }

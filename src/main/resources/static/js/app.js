@@ -1,4 +1,5 @@
 const currentArtistId = window.location.pathname.split('/')[2]
+
 const albumSubmitButton = document.querySelector('.albumSubmit')
 const artistSubmitButton = document.querySelector('.artistSubmit')
 const albumName = document.querySelector('#albumName')
@@ -25,7 +26,7 @@ function addANewAlbum(){
 			albumImage.value = ''
 		}
 	}
-	xhttp.open("POST", `/api/artists/1/albums/add`, true); //this is what this.responseText is
+	xhttp.open("POST", `/api/artists/${currentArtistId}/albums/add`, true); //this is what this.responseText is
 	const content = JSON.stringify({
 		name: albumName.value,
 		image: albumImage.value,
@@ -55,4 +56,13 @@ function addANewArtist(){
 	xhttp.send(artist)
 }
 
+function addNewSong() {
+	const xhttp = new XMLHTTPRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			//do stuff to clear fields
+		}
+	xhttp.open("POST", `/api/artists/{artistId}/albums/{albumId}/songs/add`)
+	}
+}
 
