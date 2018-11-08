@@ -4,23 +4,43 @@
 	<title>The Cool Album Page</title>
 </head>
 <body>
+	<div id="app"></div>
+	
+	<section class="addArtist"> 
+		<p>Add Artist: </p>
+		<label> Artist Name: <input id="artistName" type="text" name="artistName"/> </label>
+		<label> Artist Image: <input id="artistImage" type="text" name="artistImage"/> </label>
+		<label> Artist Age: <input id="artistAge" type="text" name="artistAge"/> </label>
+		<label> Artist Home: <input id="artistHome" type="text" name="artistHome"/> </label>
+		<button class="artistSubmit">Submit</button>
+	</section>
 
-<p class = "album"> 
-<p>Add Album: </p>
-<label> Album Name: <input id="albumName" type="text" name="albumName"/> </label>
-<label> Album Image: <input id="albumImage" type="text" name="albumImage"/> </label>
-<button class="albumSubmit">Submit</button>
-</p>
+	<section class="addAlbum"> 
+		<p>Add Album: </p>
+		<label> Album Name: <input id="albumName" type="text" name="albumName"/> </label>
+		<label> Album Image: <input id="albumImage" type="text" name="albumImage"/> </label>
+		<button class="albumSubmit">Submit</button>
+	</section>
 
-<p class = "atist"> 
-<p>Add Artist: </p>
-<label> Artist Name: <input id="artistName" type="text" name="artistName"/> </label>
-<label> Artist Image: <input id="artistImage" type="text" name="artistImage"/> </label>
-<label> Artist Age: <input id="artistAge" type="text" name="artistAge"/> </label>
-<label> Artist Home: <input id="artistHome" type="text" name="artistHome"/> </label>
-<button class="artistSubmit">Submit</button>
-</p>
+	<section class="addSong">
+		<p>Add Song:</p>
+		<label> Song Name: <input id="songName" type="text" name="songName"/> </label>
+		<label> Song Length: <input id="songLength" type="text" name="songLength"/> </label>
+		<label> Song Link: <input id="songLink" type="text" name="songLink"/> </label>
+		<button class="songSubmit">Submit</button>
+	</section>
 
-<script src="./js/app.js"></script>
+	<section id="artists">
+		
+	</section>
+	<section id="albums">
+		
+	</section>
+	<section id="songs">
+		
+	</section>
+
+
+	<script src="./js/app.js"></script>
 </body>
 </html>

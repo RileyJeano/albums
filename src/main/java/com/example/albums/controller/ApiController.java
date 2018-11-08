@@ -112,8 +112,13 @@ public class ApiController {
 		Artist artist = artistRepo.findById(artistId).get();
 		Album album = albumRepo.findById(albumId).get();
 		JSONObject json = new JSONObject(content);
+		String songName = json.getString("name");
+		String songLength = json.getString("length");
+		String songLink = json.getString("link");
+		
+		Song song = new Song(songName, songLink, songLength, album);
+		song = songRepo.save(song);
 
-		Song song = new Song();
 	}
 
 }
