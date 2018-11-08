@@ -54,17 +54,17 @@ const songSection = document.querySelector('#songs')
 getArtists()
 
 function getArtists() {
-	const xhttp = new XMLHttpRequest();
+	const xhttp = new XMLHttpRequest()
+	xhttp.open("GET", "/api/artists", true)
+	xhttp.send()
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200){
 
-			const allArtists = JSON.parse(this.responseText)
+			const allArtists = JSON.parse(this.responseText) //this.response text is the response from the server
 			showArtists(allArtists)
 
 		}
 	}
-	xhttp.open("GET", "/api/artists", true)
-	xhttp.send()
 }
 
 function showArtists(allArtists) {
@@ -144,14 +144,6 @@ songSubmitButton.addEventListener('click', ()=>{
 
 function addANewArtist(){
 	const xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			artistName.value=''
-			artistImage.value=''
-			artistAge.value=''
-			artistHome.value = ''
-		}
-	}
 	xhttp.open("POST", `/api/artist/add`, true); //this is what this.responseText is
 	const artist = JSON.stringify({
 		name: artistName.value,
@@ -161,6 +153,15 @@ function addANewArtist(){
 	})
 	
 	xhttp.send(artist)
+	
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			artistName.value=''
+			artistImage.value=''
+			artistAge.value=''
+			artistHome.value = ''
+		}
+	}
 }
 
 function addANewAlbum(){

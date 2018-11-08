@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/main/resources/static/js/index.js",
+    "start": "parcel src/main/resources/static/index.html",
     "build": "parcel build src/main/resources/static/js/index.js --out-dir src/main/resources/static/dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
