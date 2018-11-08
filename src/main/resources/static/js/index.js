@@ -1,13 +1,19 @@
-const appHtml = document.querySelector('#app')
+const entry = document.querySelector('#app')
 
 //Imports
-const {AppWrapper} = require('./appWrapper')
-const {AddArtist} = require('./addArtist')
+const { AppWrapper } = require('./appWrapper.js')
+const { AddArtist } = require('./addArtist.js')
+const { AddAlbum } = require('./addAlbum')
+const {AddSong} = require('./addSong')
 
 //App Components
-const addArtist = new addArtist()
+const addArtist = new AddArtist()
+const addAlbum = new AddAlbum()
+const addSong = new AddSong()
 
 //Build App
-AppWrapper.innerHTML += AddArtist.render()
+AppWrapper.innerHTML += addArtist.render()
+AppWrapper.innerHTML += addAlbum.render()
+AppWrapper.innerHTML += addSong.render()
 
-appHtml.appendChild(AppWrapper)
+entry.appendChild(AppWrapper)

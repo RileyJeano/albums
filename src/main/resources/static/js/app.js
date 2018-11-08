@@ -1,17 +1,3 @@
-const currentArtistId = window.location.pathname.split('/')[2]
-
-const albumSubmitButton = document.querySelector('.albumSubmit')
-const artistSubmitButton = document.querySelector('.artistSubmit')
-const songSubmitButton = document.querySelector('.songSubmit')
-const albumName = document.querySelector('#albumName')
-const albumImage = document.querySelector('#albumImage')
-const artistName = document.querySelector('#artistName')
-const artistImage = document.querySelector('#artistImage')
-const artistAge = document.querySelector('#artistAge')
-const artistHome = document.querySelector('#artistHome')
-const songName = document.querySelector('#songName')
-const songLength = document.querySelector('#songLength')
-const songLink = document.querySelector('#songLink')
 
 
 
@@ -46,6 +32,21 @@ const songLink = document.querySelector('#songLink')
 // 	xhttp.open("GET", '/api/artists', true)
 // 	xhttp.send()
 // }
+
+const currentArtistId = window.location.pathname.split('/')[2]
+
+const albumSubmitButton = document.querySelector('.albumSubmit')
+const artistSubmitButton = document.querySelector('.artistSubmit')
+const songSubmitButton = document.querySelector('.songSubmit')
+const albumName = document.querySelector('#albumName')
+const albumImage = document.querySelector('#albumImage')
+const artistName = document.querySelector('#artistName')
+const artistImage = document.querySelector('#artistImage')
+const artistAge = document.querySelector('#artistAge')
+const artistHome = document.querySelector('#artistHome')
+const songName = document.querySelector('#songName')
+const songLength = document.querySelector('#songLength')
+const songLink = document.querySelector('#songLink')
 
 const artistSection = document.querySelector('#artists')
 const albumSection = document.querySelector('#albums')
@@ -153,7 +154,7 @@ function addANewArtist(){
 	})
 	
 	xhttp.send(artist)
-	
+
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			artistName.value=''

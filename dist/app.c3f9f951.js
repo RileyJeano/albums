@@ -104,144 +104,202 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"appWrapper.js":[function(require,module,exports) {
-var AppWrapper = function () {
-  var appWrapper = document.createElement('div');
-  appWrapper.classList.add('wrapper');
-  return appWrapper;
-}();
-
-module.exports = {
-  AppWrapper: AppWrapper
-};
-},{}],"js/addArtist.js":[function(require,module,exports) {
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-// const addArtist = (function() {
-// 	function addArtist() {}
-// 	addArtist.prototype = {
-// 		render: function() {
-// 			return `
-// 				<section class="addArtist"> 
-// 					<p>Add Artist: </p>
-// 					<label> Artist Name: <input id="artistName" type="text" name="artistName"/> </label>
-// 					<label> Artist Image: <input id="artistImage" type="text" name="artistImage"/> </label>
-// 					<label> Artist Age: <input id="artistAge" type="text" name="artistAge"/> </label>
-// 					<label> Artist Home: <input id="artistHome" type="text" name="artistHome"/> </label>
-// 					<button class="artistSubmit">Submit</button>
-// 				</section>
-// 			`
+})({"js/app.js":[function(require,module,exports) {
+var currentArtistId = window.location.pathname.split('/')[2];
+var albumSubmitButton = document.querySelector('.albumSubmit');
+var artistSubmitButton = document.querySelector('.artistSubmit');
+var songSubmitButton = document.querySelector('.songSubmit');
+var albumName = document.querySelector('#albumName');
+var albumImage = document.querySelector('#albumImage');
+var artistName = document.querySelector('#artistName');
+var artistImage = document.querySelector('#artistImage');
+var artistAge = document.querySelector('#artistAge');
+var artistHome = document.querySelector('#artistHome');
+var songName = document.querySelector('#songName');
+var songLength = document.querySelector('#songLength');
+var songLink = document.querySelector('#songLink'); //This code might actually do too much, it displays the artists AND their albums. We just want to show the artists. And make it so you can click the artist to see the album.
+// let artistSection = document.querySelector('#artists')
+// getArtists()
+// function getArtists() {
+// 	const xhttp = new XMLHttpRequest();
+// 	xhttp.onreadystatechange = function() {
+// 		if (this.readyState == 4 && this.status == 200) {
+// 			let allArtists = JSON.parse(this.responseText) //allArtists is what we got back from the API via AJAX
+// 			let listOfAllArtists = document.createElement('ul') //create a list for artists
+// 			allArtists.forEach(artist => {
+// 				const artistHeader = document.createElement('li')
+// 				artistHeader.innerText = artist.name
+// 				let artistUl = document.createElement('ul') //create a list for albums
+// 				artist.albums.forEach(album => {
+// 					let albumLi = document.createElement('li')
+// 					albumLi.innerText = album.name
+// 					artistUl.appendChild(albumLi)
+// 				})
+// 				listOfAllArtists.appendChild(artistHeader)
+// 				listOfAllArtists.appendChild(artistUl)
+// 			})
+// 			artistSection.appendChild(listOfAllArtists)
 // 		}
 // 	}
-// 	return addArtist
-// })()
-// module.exports = {
-// 	addArtist
+// 	xhttp.open("GET", '/api/artists', true)
+// 	xhttp.send()
 // }
-var AddArtist =
-/*#__PURE__*/
-function () {
-  function AddArtist() {
-    _classCallCheck(this, AddArtist);
-  }
 
-  _createClass(AddArtist, [{
-    key: "render",
-    value: function render() {
-      return "\n\t\t\t\t<section class=\"addArtist\"> \n\t\t\t\t\t<p>Add Artist: </p>\n\t\t\t\t\t<label> Artist Name: <input id=\"artistName\" type=\"text\" name=\"artistName\"/> </label>\n\t\t\t\t\t<label> Artist Image: <input id=\"artistImage\" type=\"text\" name=\"artistImage\"/> </label>\n\t\t\t\t\t<label> Artist Age: <input id=\"artistAge\" type=\"text\" name=\"artistAge\"/> </label>\n\t\t\t\t\t<label> Artist Home: <input id=\"artistHome\" type=\"text\" name=\"artistHome\"/> </label>\n\t\t\t\t\t<button class=\"artistSubmit\">Submit</button>\n\t\t\t\t</section>\n\t\t";
+var artistSection = document.querySelector('#artists');
+var albumSection = document.querySelector('#albums');
+var songSection = document.querySelector('#songs');
+getArtists();
+
+function getArtists() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/api/artists", true);
+  xhttp.send();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var allArtists = JSON.parse(this.responseText); //this.response text is the response from the server
+
+      showArtists(allArtists);
     }
-  }]);
+  };
+}
 
-  return AddArtist;
-}();
+function showArtists(allArtists) {
+  artistSection.innerHTML = '';
+  allArtists.forEach(function (artist) {
+    var artistHeader = document.createElement('h1');
+    artistHeader.innerText = artist.name;
+    artistHeader.addEventListener('click', function () {
+      getAlbums(artist.id);
+    });
+    artistSection.appendChild(artistHeader);
+  });
+}
 
-module.exports = {
-  AddArtist: AddArtist
-};
-},{}],"js/addAlbum.js":[function(require,module,exports) {
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function getAlbums(artistId) {
+  var xhttp = new XMLHttpRequest();
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var AddAlbum =
-/*#__PURE__*/
-function () {
-  function AddAlbum() {
-    _classCallCheck(this, AddAlbum);
-  }
-
-  _createClass(AddAlbum, [{
-    key: "render",
-    value: function render() {
-      return "\n\t\t\t<section class=\"addAlbum\"> \n\t\t\t\t<p>Add Album: </p>\n\t\t\t\t<label> Album Name: <input id=\"albumName\" type=\"text\" name=\"albumName\"/> </label>\n\t\t\t\t<label> Album Image: <input id=\"albumImage\" type=\"text\" name=\"albumImage\"/> </label>\n\t\t\t\t<button class=\"albumSubmit\">Submit</button>\n\t\t\t</section>\n\t\t";
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var allAlbums = JSON.parse(this.responseText);
+      showAlbums(allAlbums, artistId);
     }
-  }]);
+  };
 
-  return AddAlbum;
-}();
+  xhttp.open("GET", "/api/".concat(artistId, "/albums"), true);
+  xhttp.send();
+}
 
-module.exports = {
-  AddAlbum: AddAlbum
-};
-},{}],"js/addSong.js":[function(require,module,exports) {
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function showAlbums(allAlbums, artistId) {
+  albumSection.innerHTML = '';
+  songSection.innerHTML = '';
+  allAlbums.forEach(function (album) {
+    var albumHeader = document.createElement('h3');
+    albumHeader.innerText = album.name;
+    albumHeader.addEventListener('click', function () {
+      getSongs(album.id, artistId);
+    });
+    albumSection.appendChild(albumHeader);
+  });
+}
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function getSongs(albumId, artistId) {
+  var xhttp = new XMLHttpRequest();
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var AddSong =
-/*#__PURE__*/
-function () {
-  function AddSong() {
-    _classCallCheck(this, AddSong);
-  }
-
-  _createClass(AddSong, [{
-    key: "render",
-    value: function render() {
-      return "\n\t\t\t<section class=\"addSong\">\n\t\t\t\t<p>Add Song:</p>\n\t\t\t\t<label> Song Name: <input id=\"songName\" type=\"text\" name=\"songName\"/> </label>\n\t\t\t\t<label> Song Length: <input id=\"songLength\" type=\"text\" name=\"songLength\"/> </label>\n\t\t\t\t<label> Song Link: <input id=\"songLink\" type=\"text\" name=\"songLink\"/> </label>\n\t\t\t\t<button class=\"songSubmit\">Submit</button>\n\t\t\t</section>\n\t\t";
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var allSongs = JSON.parse(this.responseText);
+      showSongs(allSongs);
     }
-  }]);
+  };
 
-  return AddSong;
-}();
+  xhttp.open("GET", "/api/".concat(artistId, "/albums/").concat(albumId, "/songs"), true);
+  xhttp.send();
+}
 
-module.exports = {
-  AddSong: AddSong
-};
-},{}],"js/index.js":[function(require,module,exports) {
-var entry = document.querySelector('#app'); //Imports
+function showSongs(allSongs) {
+  songSection.innerHTML = '';
+  allSongs.forEach(function (song) {
+    var songHeader = document.createElement('h4');
+    songHeader.innerText = song.name; //add an event listener here so that songs can display their length, etc...
 
-var _require = require('./appWrapper.js'),
-    AppWrapper = _require.AppWrapper;
-
-var _require2 = require('./addArtist.js'),
-    AddArtist = _require2.AddArtist;
-
-var _require3 = require('./addAlbum'),
-    AddAlbum = _require3.AddAlbum;
-
-var _require4 = require('./addSong'),
-    AddSong = _require4.AddSong; //.js
-//App Components
+    songSection.appendChild(songHeader);
+  });
+} ////////////////////  ADDING NEW DATA //////////////////////////////////////
 
 
-var addArtist = new AddArtist();
-var addAlbum = new AddAlbum();
-var addSong = new AddSong(); //Build App
+albumSubmitButton.addEventListener('click', function () {
+  addANewAlbum();
+});
+artistSubmitButton.addEventListener('click', function () {
+  addANewArtist();
+});
+songSubmitButton.addEventListener('click', function () {
+  addNewSong();
+});
 
-AppWrapper.innerHTML += addArtist.render();
-AppWrapper.innerHTML += addAlbum.render();
-AppWrapper.innerHTML += addSong.render();
-entry.appendChild(AppWrapper);
-},{"./appWrapper.js":"appWrapper.js","./addArtist.js":"js/addArtist.js","./addAlbum":"js/addAlbum.js","./addSong":"js/addSong.js"}],"../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+function addANewArtist() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/artist/add", true); //this is what this.responseText is
+
+  var artist = JSON.stringify({
+    name: artistName.value,
+    image: artistImage.value,
+    age: artistAge.value,
+    home: artistHome.value
+  });
+  xhttp.send(artist);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      artistName.value = '';
+      artistImage.value = '';
+      artistAge.value = '';
+      artistHome.value = '';
+    }
+  };
+}
+
+function addANewAlbum() {
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      albumName.value = '';
+      albumImage.value = '';
+    }
+  };
+
+  xhttp.open("POST", "/api/artists/1/albums/add", true); //this is what "this.responseText" is
+
+  var content = JSON.stringify({
+    name: albumName.value,
+    image: albumImage.value
+  });
+  xhttp.send(content);
+}
+
+function addNewSong() {
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      songName.value = '';
+      songLink.value = '';
+      songLength.value = '';
+    }
+  };
+
+  xhttp.open("POST", "/api/artists/1/albums/2/songs/add", true); //1 is Captain Carrion and the Buzzards, 2 is their Album
+
+  var song = JSON.stringify({
+    name: songName.value,
+    length: songLength.value,
+    link: songLink.value
+  });
+  xhttp.send(song);
+}
+},{}],"../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -410,5 +468,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/index.js"], null)
-//# sourceMappingURL=/js.00a46daa.map
+},{}]},{},["../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/app.js"], null)
+//# sourceMappingURL=/app.c3f9f951.map

@@ -162,21 +162,85 @@ function () {
 module.exports = {
   AddArtist: AddArtist
 };
-},{}],"index.js":[function(require,module,exports) {
-var appHtml = document.querySelector('#app'); //Imports
+},{}],"addAlbum.js":[function(require,module,exports) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _require = require('./appWrapper'),
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var AddAlbum =
+/*#__PURE__*/
+function () {
+  function AddAlbum() {
+    _classCallCheck(this, AddAlbum);
+  }
+
+  _createClass(AddAlbum, [{
+    key: "render",
+    value: function render() {
+      return "\n\t\t\t<section class=\"addAlbum\"> \n\t\t\t\t<p>Add Album: </p>\n\t\t\t\t<label> Album Name: <input id=\"albumName\" type=\"text\" name=\"albumName\"/> </label>\n\t\t\t\t<label> Album Image: <input id=\"albumImage\" type=\"text\" name=\"albumImage\"/> </label>\n\t\t\t\t<button class=\"albumSubmit\">Submit</button>\n\t\t\t</section>\n\t\t";
+    }
+  }]);
+
+  return AddAlbum;
+}();
+
+module.exports = {
+  AddAlbum: AddAlbum
+};
+},{}],"addSong.js":[function(require,module,exports) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var AddSong =
+/*#__PURE__*/
+function () {
+  function AddSong() {
+    _classCallCheck(this, AddSong);
+  }
+
+  _createClass(AddSong, [{
+    key: "render",
+    value: function render() {
+      return "\n\t\t\t<section class=\"addSong\">\n\t\t\t\t<p>Add Song:</p>\n\t\t\t\t<label> Song Name: <input id=\"songName\" type=\"text\" name=\"songName\"/> </label>\n\t\t\t\t<label> Song Length: <input id=\"songLength\" type=\"text\" name=\"songLength\"/> </label>\n\t\t\t\t<label> Song Link: <input id=\"songLink\" type=\"text\" name=\"songLink\"/> </label>\n\t\t\t\t<button class=\"songSubmit\">Submit</button>\n\t\t\t</section>\n\t\t";
+    }
+  }]);
+
+  return AddSong;
+}();
+
+module.exports = {
+  AddSong: AddSong
+};
+},{}],"index.js":[function(require,module,exports) {
+var entry = document.querySelector('#app'); //Imports
+
+var _require = require('./appWrapper.js'),
     AppWrapper = _require.AppWrapper;
 
-var _require2 = require('./addArtist'),
-    AddArtist = _require2.AddArtist; //App Components
+var _require2 = require('./addArtist.js'),
+    AddArtist = _require2.AddArtist;
+
+var _require3 = require('./addAlbum'),
+    AddAlbum = _require3.AddAlbum;
+
+var _require4 = require('./addSong'),
+    AddSong = _require4.AddSong; //App Components
 
 
-var addArtist = new addArtist(); //Build App
+var addArtist = new AddArtist();
+var addAlbum = new AddAlbum();
+var addSong = new AddSong(); //Build App
 
-AppWrapper.innerHTML += AddArtist.render();
-appHtml.appendChild(AppWrapper);
-},{"./appWrapper":"appWrapper.js","./addArtist":"addArtist.js"}],"../../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+AppWrapper.innerHTML += addArtist.render();
+AppWrapper.innerHTML += addAlbum.render();
+AppWrapper.innerHTML += addSong.render();
+entry.appendChild(AppWrapper);
+},{"./appWrapper.js":"appWrapper.js","./addArtist.js":"addArtist.js","./addAlbum":"addAlbum.js","./addSong":"addSong.js"}],"../../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -203,7 +267,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49768" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49357" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
