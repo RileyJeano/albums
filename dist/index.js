@@ -121,27 +121,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// const addArtist = (function() {
-// 	function addArtist() {}
-// 	addArtist.prototype = {
-// 		render: function() {
-// 			return `
-// 				<section class="addArtist"> 
-// 					<p>Add Artist: </p>
-// 					<label> Artist Name: <input id="artistName" type="text" name="artistName"/> </label>
-// 					<label> Artist Image: <input id="artistImage" type="text" name="artistImage"/> </label>
-// 					<label> Artist Age: <input id="artistAge" type="text" name="artistAge"/> </label>
-// 					<label> Artist Home: <input id="artistHome" type="text" name="artistHome"/> </label>
-// 					<button class="artistSubmit">Submit</button>
-// 				</section>
-// 			`
-// 		}
-// 	}
-// 	return addArtist
-// })()
-// module.exports = {
-// 	addArtist
-// }
 var AddArtist =
 /*#__PURE__*/
 function () {
@@ -216,7 +195,82 @@ function () {
 module.exports = {
   AddSong: AddSong
 };
+},{}],"activateListenerButtons.js":[function(require,module,exports) {
+function activateListeningPowers(button, thingToDo) {
+  button.addEventListener('click', thingToDo);
+}
+
+function addANewArtist() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/artist/add", true); //this is what this.responseText is
+
+  var artist = JSON.stringify({
+    name: artistName.value,
+    image: artistImage.value,
+    age: artistAge.value,
+    home: artistHome.value
+  });
+  xhttp.send(artist);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      artistName.value = '';
+      artistImage.value = '';
+      artistAge.value = '';
+      artistHome.value = '';
+    }
+  };
+}
+
+function addANewAlbum() {
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      albumName.value = '';
+      albumImage.value = '';
+    }
+  };
+
+  xhttp.open("POST", "/api/artists/1/albums/add", true); //this is what "this.responseText" is
+
+  var content = JSON.stringify({
+    name: albumName.value,
+    image: albumImage.value
+  });
+  xhttp.send(content);
+}
+
+function addANewSong() {
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      songName.value = '';
+      songLink.value = '';
+      songLength.value = '';
+    }
+  };
+
+  xhttp.open("POST", "/api/artists/1/albums/2/songs/add", true); //1 is Captain Carrion and the Buzzards, 2 is their Album
+
+  var song = JSON.stringify({
+    name: songName.value,
+    length: songLength.value,
+    link: songLink.value
+  });
+  xhttp.send(song);
+}
+
+module.exports = {
+  activateListeningPowers: activateListeningPowers,
+  addANewArtist: addANewArtist,
+  addANewAlbum: addANewAlbum,
+  addANewSong: addANewSong
+};
 },{}],"index.js":[function(require,module,exports) {
+function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
+
 var entry = document.querySelector('#app'); //Imports
 
 var _require = require('./appWrapper.js'),
@@ -229,7 +283,13 @@ var _require3 = require('./addAlbum'),
     AddAlbum = _require3.AddAlbum;
 
 var _require4 = require('./addSong'),
-    AddSong = _require4.AddSong; //App Components
+    AddSong = _require4.AddSong;
+
+var _require5 = require('./activateListenerButtons'),
+    activateListeningPowers = _require5.activateListeningPowers,
+    addANewArtist = _require5.addANewArtist,
+    addANewAlbum = _require5.addANewAlbum,
+    addANewSong = _require5.addANewSong; //App Components
 
 
 var addArtist = new AddArtist();
@@ -238,9 +298,16 @@ var addSong = new AddSong(); //Build App
 
 AppWrapper.innerHTML += addArtist.render();
 AppWrapper.innerHTML += addAlbum.render();
-AppWrapper.innerHTML += addSong.render();
+AppWrapper.innerHTML += addSong.render(); //AddListeners
+
+var artistSubmitButton = document.querySelector('.artistSubmit');
+activateListeningPowers(artistSubmitButton, addANewArtist);
+var albumSubmitButton = document.querySelector('.albumSubmit');
+activateListeningPowers(albumSubmitButton, addANewAlbum);
+var songSubmitButton = document.querySelector('.songSubmit');
+activateListeningPowers = (_readOnlyError("activateListeningPowers"), (songSubmitButton, addANewSong));
 entry.appendChild(AppWrapper);
-},{"./appWrapper.js":"appWrapper.js","./addArtist.js":"addArtist.js","./addAlbum":"addAlbum.js","./addSong":"addSong.js"}],"../../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./appWrapper.js":"appWrapper.js","./addArtist.js":"addArtist.js","./addAlbum":"addAlbum.js","./addSong":"addSong.js","./activateListenerButtons":"activateListenerButtons.js"}],"../../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

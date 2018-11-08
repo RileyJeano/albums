@@ -1,38 +1,4 @@
 
-
-
-//This code might actually do too much, it displays the artists AND their albums. We just want to show the artists. And make it so you can click the artist to see the album.
-// let artistSection = document.querySelector('#artists')
-// getArtists()
-// function getArtists() {
-// 	const xhttp = new XMLHttpRequest();
-// 	xhttp.onreadystatechange = function() {
-// 		if (this.readyState == 4 && this.status == 200) {
-
-// 			let allArtists = JSON.parse(this.responseText) //allArtists is what we got back from the API via AJAX
-// 			let listOfAllArtists = document.createElement('ul') //create a list for artists
-// 			allArtists.forEach(artist => {
-// 				const artistHeader = document.createElement('li')
-// 				artistHeader.innerText = artist.name
-// 				let artistUl = document.createElement('ul') //create a list for albums
-// 				artist.albums.forEach(album => {
-// 					let albumLi = document.createElement('li')
-// 					albumLi.innerText = album.name
-// 					artistUl.appendChild(albumLi)
-
-// 				})
-// 				listOfAllArtists.appendChild(artistHeader)
-// 				listOfAllArtists.appendChild(artistUl)
-// 			})
-// 			artistSection.appendChild(listOfAllArtists)
-
-// 		}
-// 	}
-
-// 	xhttp.open("GET", '/api/artists', true)
-// 	xhttp.send()
-// }
-
 const currentArtistId = window.location.pathname.split('/')[2]
 
 const albumSubmitButton = document.querySelector('.albumSubmit')
@@ -131,12 +97,12 @@ function showSongs(allSongs){
 
 ////////////////////  ADDING NEW DATA //////////////////////////////////////
 
-albumSubmitButton.addEventListener('click', () => {
-	addANewAlbum()
-})
-
 artistSubmitButton.addEventListener('click', ()=>{
 	addANewArtist()
+})
+
+albumSubmitButton.addEventListener('click', () => {
+	addANewAlbum()
 })
 
 songSubmitButton.addEventListener('click', ()=>{
