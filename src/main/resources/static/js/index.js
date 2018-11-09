@@ -23,9 +23,9 @@ const addStuffDisplay = new AddStuffDisplay(addingStuffSection)
 
 //Build App
 showArtists.getArtists()
-AppWrapper.innerHTML += addStuffDisplay.render()
-const toggleInputDisplayButton = document.querySelector('#toggle-input-display-button')
-addStuffDisplay.activateButton(toggleInputDisplayButton)
+// AppWrapper.innerHTML += addStuffDisplay.render()
+// const toggleInputDisplayButton = document.querySelector('#toggle-input-display-button')
+// addStuffDisplay.activateButton(toggleInputDisplayButton)
 addingStuffSection.innerHTML += addArtist.render()
 addingStuffSection.innerHTML += addAlbum.render()
 addingStuffSection.innerHTML += addSong.render()
