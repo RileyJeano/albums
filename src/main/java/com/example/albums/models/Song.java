@@ -21,6 +21,7 @@ public class Song {
 	private String name;
 	private String link;
 	private String length;
+	private int rating;
 
 	@JsonIgnore
 	@ManyToOne
@@ -41,6 +42,14 @@ public class Song {
 		this.link = link;
 		this.length = length;
 		this.album = album;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
 	}
 
 	public Long getId() {

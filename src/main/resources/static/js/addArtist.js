@@ -11,6 +11,7 @@ class AddArtist {
 					<label> Artist Home: <input id="artistHome" type="text" name="artistHome"/> </label>
 					<button class="artistSubmit">Submit</button>
 				</section>
+				
 		`
 	}
 }
