@@ -134,7 +134,7 @@ function showAlbums(allAlbums, artistId){
 	allAlbums.forEach(album => {
 		const albumHeader = document.createElement('h3')
 		albumHeader.innerText = album.name
-		albumHeader.innerHTML += `<img src='.${album.image}'></img>`
+		albumHeader.innerHTML += `<img src='..${album.image}'></img>`
 		albumHeader.addEventListener('click', function(){
 			getSongs(album.id, artistId)
 		})
@@ -197,7 +197,6 @@ function addANewArtist(){
 		age: artistAge.value,
 		home: artistHome.value,
 	})
-	
 	xhttp.send(artist)
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -223,7 +222,6 @@ function addANewAlbum(){
 		name: albumName.value,
 		image: albumImage.value,
 	})
-	
 	xhttp.send(content)
 }
 
