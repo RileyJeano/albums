@@ -19,15 +19,12 @@ public class Tag {
 	private Long id;
 	private String tagName;
 
-	@JsonIgnore
 	@ManyToMany
 	private Collection<Artist> artists = new HashSet<Artist>();
 
-	@JsonIgnore
 	@ManyToMany
 	private Collection<Album> albums = new HashSet<Album>();
 
-	@JsonIgnore
 	@ManyToMany
 	private Collection<Song> songs = new HashSet<Song>();
 

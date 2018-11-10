@@ -56,6 +56,31 @@ function showArtists(allArtists) {
 		artistSection.appendChild(artistHeader)
 		artistSection.appendChild(artistSubheaderAge)
 		artistSection.appendChild(artistSubheaderHome)
+		
+		const tagSectionArtist = document.createElement('section')
+		tagSectionArtist.classList.add("artistTag")
+		const tagButtonArtist = document.createElement('button')
+		tagButtonArtist.classList.add("artistButton")
+		tagButtonArtist.innerText = "Submit"
+		const tagInputArtist = document.createElement('input')
+		tagInputArtist.type = "text"
+		tagInputArtist.name="artistTag"
+		const tagInputArtistHidden = document.createElement('input')
+		tagInputArtistHidden.type = "hidden"
+		tagInputArtistHidden.value = artist.id
+		tagInputArtist.name="artistTagHidden";
+		
+		const tags = getTags(`/api/artists/${artist.id}/tags`)
+		console.log('this is what we feed to getTagHtml()')
+		console.log(tags)
+		const tagHtml = getTagHtml(tags)
+		tagSectionArtist.appendChild(tagHtml)
+		
+		tagSectionArtist.appendChild(tagInputArtist)
+		tagSectionArtist.appendChild(tagInputArtistHidden)
+		tagSectionArtist.appendChild(tagButtonArtist)
+		
+		artistSection.appendChild(tagSectionArtist)
 	})
 }
 
@@ -86,7 +111,7 @@ function showAlbums(allAlbums, artistId){
 	allAlbums.forEach(album => {
 		const albumHeader = document.createElement('h3')
 		albumHeader.innerText = album.name
-		albumHeader.innerHTML += `<img src='..${album.image}'></img>`
+		albumHeader.innerHTML += `<img src='/images/${album.image}'></img>`
 		albumHeader.addEventListener('click', function(){
 			getSongs(album.id, artistId)
 		})
@@ -196,3 +221,80 @@ function addNewSong() {
 	xhttp.send(song)
 }
 
+////////////////////ADDING AND REMOVING TAGS //////////////////////////////////////
+//const addTagButton = document.querySelector(the button we need to select);
+//const p = document.querySelector(the selection we want to change);
+//const original = p.innerHTML; (Setting this to empty at begining)
+//const input = document.querySelector('.taggyTag'); (input field name)
+//reviewId = window.location.pathname.split('/')[2];
+
+//addTag(input, reviewId, addTagButton, p, original);
+
+//fetch(`/api/reviews/${window.location.pathname.split('/')[2]}`, {
+// 				method: 'get'
+// 			})
+// 			.then(res => res.json())
+// 			.then(data => {
+// 				data.forEach(tag =>{
+// 					addTagHtml(tag, p, reviewId)
+// 					})
+// 				addDeleteButtonsEvent(p, reviewId);
+// 				})
+
+function getTags(path){
+	fetch(path)
+	.then(res => 
+		res.json()
+	)
+	.then(tags => {
+			return tags
+			
+	})
+	.catch(console.log("Ooooooh fuck, your fetch didn't then. It's hasn't then-ed."))	
+}
+
+
+function getTagHtml(tags) {
+	console.log(tags + 'this is inside the getTagHtml function')
+	let ul = document.createElement('ul')
+	tags.forEach(tag => {
+		ul.innerHTML += `<li>${tag.tagName}</li>`
+	})
+	return ul
+}
+ 				
+function addTag(input, reviewId, addTagButton, p, original) {
+	
+	addTagButton.addEventListener('click', function() {
+		
+		const xhttp = new XMLHttpRequest()
+		
+		// Sets behavior for when the AJAX request is complete
+		xhttp.onreadystatechange = function() {
+			
+			// Checks the ready state and http status code
+			if (this.readyState == 4 && this.status == 200) {
+				
+				//Resets the original p element
+				p.innerHTML = original;
+
+				JSON.parse(this.responseText).forEach(tag => {
+					addTagHtml(tag, p, reviewId)
+				})
+				addDeleteButtonsEvent(p, reviewId)
+			}
+		}
+		xhttp.open('POST', `/api/reviews/${window.location.pathname.split('/')[2]}/tags/add`, true)
+		const body = JSON.stringify({
+					tagName: input.value
+				})
+		xhttp.send(body)
+	})
+}
+
+//function addTagHtml(tag, p) {
+//
+//	p.innerHTML = p.innerHTML + `
+//		<a href = "/tag/${tag.id}" class="a${tag.id}">${tag.tagName}</a> <button class="delete" data-num="${tag.id}">X</button>
+//	`;
+//}

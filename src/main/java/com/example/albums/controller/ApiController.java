@@ -46,6 +46,11 @@ public class ApiController {
 		return (Collection<Artist>) artistRepo.findAll();
 	}
 
+	@GetMapping("api/artists/{artistId}/tags")
+	public Collection<Tag> showArtistsTags(@PathVariable(value = "artistId") Long artistId) {
+		return artistRepo.findById(artistId).get().getTags();
+	}
+
 	@GetMapping("/api/{artistId}/albums")
 	public Collection<Album> showArtistsAlbums(@PathVariable(value = "artistId") Long artistId) {
 		return (Collection<Album>) artistRepo.findById(artistId).get().getAlbums();
@@ -55,6 +60,12 @@ public class ApiController {
 	public Album showAlbum(@PathVariable(value = "artistId") Long artistId,
 			@PathVariable(value = "albumId") Long albumId) {
 		return albumRepo.findById(albumId).get();
+	}
+
+	@GetMapping("/api/{artistId}/albums/{albumId}/tags")
+	public Collection<Tag> showAlbumsTags(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId) {
+		return albumRepo.findById(albumId).get().getTags();
 	}
 
 	@GetMapping("/api/{artistId}/albums/{albumId}/songs")
@@ -67,6 +78,12 @@ public class ApiController {
 	public Song showSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
 			@PathVariable(value = "songId") Long songId) {
 		return songRepo.findById(songId).get();
+	}
+
+	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/tags")
+	public Collection<Tag> showSongTags(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId) {
+		return songRepo.findById(songId).get().getTags();
 	}
 
 	@GetMapping("/api/albums")
@@ -115,7 +132,7 @@ public class ApiController {
 		String songName = json.getString("name");
 		String songLength = json.getString("length");
 		String songLink = json.getString("link");
-		
+
 		Song song = new Song(songName, songLink, songLength, album);
 		song = songRepo.save(song);
 

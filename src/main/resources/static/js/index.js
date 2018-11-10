@@ -5,14 +5,14 @@ const { AppWrapper } = require('./appWrapper.js')
 const { AddArtist } = require('./addArtist.js')
 const { AddAlbum } = require('./addAlbum')
 const {AddSong} = require('./addSong')
-<<<<<<< HEAD
+
 const {
 	activateListeningPowers,
 	addANewArtist,
 	addANewAlbum,
 	addANewSong
 	} = require('./activateListenerButtons')
-=======
+
 const { ShowArtists } = require('./showArtists')
 const { AddStuffDisplay } = require('./AddStuffDisplay')
 
@@ -21,7 +21,6 @@ const artistSection = document.querySelector('#artists')
 const albumSection = document.querySelector('#albums')
 const songSection = document.querySelector('#songs')
 const addingStuffSection = document.querySelector('#adding-stuff-section')
->>>>>>> 1ddb5cafa5452484fbf1c4d8be45604bd1b17c38
 
 //App Components
 const addArtist = new AddArtist()
@@ -46,5 +45,5 @@ activateListeningPowers(artistSubmitButton, addANewArtist)
 const albumSubmitButton = document.querySelector('.albumSubmit')
 activateListeningPowers(albumSubmitButton, addANewAlbum)
 const songSubmitButton = document.querySelector('.songSubmit')
-activateListeningPowers = (songSubmitButton, addANewSong)
+activateListeningPowers(songSubmitButton, addANewSong)
 entry.appendChild(AppWrapper)

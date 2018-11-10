@@ -19,6 +19,7 @@ public class Album {
 	private Long id;
 	private String name;
 	private String image;
+	private int rating;
 
 	@OneToMany(mappedBy = "album")
 	private Collection<Song> songs = new HashSet<Song>();
@@ -41,6 +42,14 @@ public class Album {
 		this.name = name;
 		this.image = image;
 		this.artist = artist;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	public int getRating() {
+		return rating;
 	}
 
 	public Long getId() {
@@ -74,4 +83,5 @@ public class Album {
 	public Collection<Comment> getComments() {
 		return comments;
 	}
+
 }
