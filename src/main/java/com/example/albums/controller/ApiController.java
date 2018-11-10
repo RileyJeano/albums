@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.albums.models.Album;
 import com.example.albums.models.Artist;
+import com.example.albums.models.Comment;
 import com.example.albums.models.Song;
 import com.example.albums.models.Tag;
 import com.example.albums.repository.AlbumRepository;
@@ -62,10 +63,15 @@ public class ApiController {
 		return albumRepo.findById(albumId).get();
 	}
 
-	@GetMapping("/api/{artistId}/albums/{albumId}/tags")
-	public Collection<Tag> showAlbumsTags(@PathVariable(value = "artistId") Long artistId,
+	@GetMapping("/api/{artistId}/albums/{albumId}/comments")
+	public Collection<Comment> showAlbumsComments(@PathVariable(value = "artistId") Long artistId,
 			@PathVariable(value = "albumId") Long albumId) {
-		return albumRepo.findById(albumId).get().getTags();
+		return albumRepo.findById(albumId).get().getComments();
+	}
+
+	@GetMapping("api/artists/{artistId}/comments")
+	public Collection<Comment> showArtistsComment(@PathVariable(value = "artistId") Long artistId) {
+		return artistRepo.findById(artistId).get().getComments();
 	}
 
 	@GetMapping("/api/{artistId}/albums/{albumId}/songs")
@@ -99,6 +105,23 @@ public class ApiController {
 	@GetMapping("/api/tags")
 	public Collection<Tag> showTags() {
 		return (Collection<Tag>) tagRepo.findAll();
+	}
+
+	@GetMapping("/api/comments")
+	public Collection<Comment> showComments() {
+		return (Collection<Comment>) commentRepo.findAll();
+	}
+
+	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/comments")
+	public Collection<Comment> showSongComments(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId) {
+		return songRepo.findById(songId).get().getComments();
+	}
+
+	@GetMapping("/api/{artistId}/albums/{albumId}/tags")
+	public Collection<Tag> showAlbumsTags(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId) {
+		return albumRepo.findById(albumId).get().getTags();
 	}
 
 	@PostMapping("/api/artist/add")

@@ -70,17 +70,17 @@ function showArtists(allArtists) {
 		tagInputArtistHidden.value = artist.id
 		tagInputArtist.name="artistTagHidden";
 		
-		const tags = getTags(`/api/artists/${artist.id}/tags`)
-		console.log('this is what we feed to getTagHtml()')
-		console.log(tags)
-		const tagHtml = getTagHtml(tags)
-		tagSectionArtist.appendChild(tagHtml)
+		//const tags = getTags(`/api/artists/${artist.id}/tags`)
+		//console.log('this is what we feed to getTagHtml()')
+		//console.log(tags)
+		//const tagHtml = getTagHtml(tags)
+		//tagSectionArtist.appendChild(tagHtml)
 		
-		tagSectionArtist.appendChild(tagInputArtist)
-		tagSectionArtist.appendChild(tagInputArtistHidden)
-		tagSectionArtist.appendChild(tagButtonArtist)
+		//tagSectionArtist.appendChild(tagInputArtist)
+		//tagSectionArtist.appendChild(tagInputArtistHidden)
+	///	tagSectionArtist.appendChild(tagButtonArtist)
 		
-		artistSection.appendChild(tagSectionArtist)
+	//	artistSection.appendChild(tagSectionArtist)
 	})
 }
 
@@ -125,7 +125,7 @@ function getSongs(albumId, artistId){
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200){
 			const allSongs = JSON.parse(this.responseText)
-			showSongs(allSongs, artistId)
+			showSongs(allSongs, artistId, albumId)
 		}
 	}
 	xhttp.open("GET", `/api/${artistId}/albums/${albumId}/songs`, true)
@@ -133,18 +133,21 @@ function getSongs(albumId, artistId){
 }
 
 
-function showSongs(allSongs, artistId){
+function showSongs(allSongs, artistId, albumId){
 	clearSections()
 	albumSection.innerHTML = `<button id='backToAlbums'>back to albums</button>`
 	document.querySelector('#backToAlbums').addEventListener('click', ()=>{
 		clearSections()
 		getAlbums(artistId)
 	})
+	const section = document.createElement('section')
+	section.classList.add('comments')
 	allSongs.forEach(song => {
 		const songHeader = document.createElement('h4')
 		songHeader.innerText = `${song.name} - ${song.length}`
 //add an event listener here so that songs can display their length, etc...
 		songSection.appendChild(songHeader)
+		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`)
 	})
 }
 
@@ -221,80 +224,34 @@ function addNewSong() {
 	xhttp.send(song)
 }
 
-////////////////////ADDING AND REMOVING TAGS //////////////////////////////////////
-//const addTagButton = document.querySelector(the button we need to select);
-//const p = document.querySelector(the selection we want to change);
-//const original = p.innerHTML; (Setting this to empty at begining)
-//const input = document.querySelector('.taggyTag'); (input field name)
-//reviewId = window.location.pathname.split('/')[2];
-
-//addTag(input, reviewId, addTagButton, p, original);
-
-//fetch(`/api/reviews/${window.location.pathname.split('/')[2]}`, {
-// 				method: 'get'
-// 			})
-// 			.then(res => res.json())
-// 			.then(data => {
-// 				data.forEach(tag =>{
-// 					addTagHtml(tag, p, reviewId)
-// 					})
-// 				addDeleteButtonsEvent(p, reviewId);
-// 				})
-
-function getTags(path){
-	fetch(path)
-	.then(res => 
-		res.json()
-	)
-	.then(tags => {
-			return tags
-			
+////////////////////ADDING AND REMOVING Comments //////////////////////////////////////
+function showComments(path){ 
+fetch(path, {
+		method: 'get'
 	})
-	.catch(console.log("Ooooooh fuck, your fetch didn't then. It's hasn't then-ed."))	
-}
-
-
-function getTagHtml(tags) {
-	console.log(tags + 'this is inside the getTagHtml function')
-	let ul = document.createElement('ul')
-	tags.forEach(tag => {
-		ul.innerHTML += `<li>${tag.tagName}</li>`
+	.then(res => res.json())
+	.then(data => {
+		data.forEach(comment =>{
+			const section = document.querySelector('.comments')
+			section.innerHTML += `
+			<p>${comment.content}</p>
+			`
+		})
 	})
-	return ul
-}
- 				
-function addTag(input, reviewId, addTagButton, p, original) {
 	
-	addTagButton.addEventListener('click', function() {
-		
-		const xhttp = new XMLHttpRequest()
-		
-		// Sets behavior for when the AJAX request is complete
-		xhttp.onreadystatechange = function() {
-			
-			// Checks the ready state and http status code
-			if (this.readyState == 4 && this.status == 200) {
-				
-				//Resets the original p element
-				p.innerHTML = original;
-
-				JSON.parse(this.responseText).forEach(tag => {
-					addTagHtml(tag, p, reviewId)
-				})
-				addDeleteButtonsEvent(p, reviewId)
-			}
-		}
-		xhttp.open('POST', `/api/reviews/${window.location.pathname.split('/')[2]}/tags/add`, true)
-		const body = JSON.stringify({
-					tagName: input.value
-				})
-		xhttp.send(body)
-	})
 }
 
-//function addTagHtml(tag, p) {
-//
-//	p.innerHTML = p.innerHTML + `
-//		<a href = "/tag/${tag.id}" class="a${tag.id}">${tag.tagName}</a> <button class="delete" data-num="${tag.id}">X</button>
-//	`;
-//}
+
+//fetch(`/api/1/albums/3/songs/4/comments`, {
+//		method: 'get'
+//	})
+//	.then(res => res.json())
+//	.then(data => {
+//		data.forEach(comment =>{
+//			const section = document.querySelector('.comments')
+//			section.innerHTML += `
+//			<p>${comment.content}</p>
+//			`
+//		})
+//	})
+	
