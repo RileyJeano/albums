@@ -140,14 +140,15 @@ function showSongs(allSongs, artistId, albumId){
 		clearSections()
 		getAlbums(artistId)
 	})
-	const section = document.createElement('section')
-	section.classList.add('comments')
 	allSongs.forEach(song => {
 		const songHeader = document.createElement('h4')
 		songHeader.innerText = `${song.name} - ${song.length}`
 //add an event listener here so that songs can display their length, etc...
 		songSection.appendChild(songHeader)
-		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`)
+		const section = document.createElement('section')
+		section.classList.add(`comments-${song.id}`)
+		songSection.appendChild(section)
+		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`)
 	})
 }
 
@@ -225,14 +226,14 @@ function addNewSong() {
 }
 
 ////////////////////ADDING AND REMOVING Comments //////////////////////////////////////
-function showComments(path){ 
+function showComments(path, className){ 
 fetch(path, {
 		method: 'get'
 	})
 	.then(res => res.json())
 	.then(data => {
 		data.forEach(comment =>{
-			const section = document.querySelector('.comments')
+			const section = document.querySelector(className)
 			section.innerHTML += `
 			<p>${comment.content}</p>
 			`
