@@ -151,6 +151,14 @@ public class ApiController {
 		album = albumRepo.save(album);
 	}
 
+	@PostMapping("/api/{artistId}/albums/{albumId}/rating/add")
+	public void increaseAlbumRating(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @RequestBody String content) throws JSONException {
+		Album album = albumRepo.findById(albumId).get();
+		album.setRating(album.getRating() + 1);
+		albumRepo.save(album);
+	}
+
 	@PostMapping("/api/{artistId}/albums/{albumId}/songs/add")
 	public void addSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
 			@RequestBody String content) throws JSONException {
