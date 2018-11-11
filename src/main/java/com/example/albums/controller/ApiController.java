@@ -188,11 +188,27 @@ public class ApiController {
 		JSONObject json = new JSONObject(content);
 		String tagName = json.getString("tagName");
 
-		Tag tag = new Tag(tagName);
-		tag.addSong(song);
-		tag = tagRepo.save(tag);
-		song.addTag(tag);
-		songRepo.save(song);
+		if (tagRepo.findByTagName(tagName) == null) {
+			Tag tag = new Tag(tagName);
+			tag.addSong(song);
+			tag = tagRepo.save(tag);
+			song.addTag(tag);
+			songRepo.save(song);
+		}
+
+		else {
+			Tag tag = tagRepo.findByTagName(tagName);
+			// if this tag is already applied to this song
+			if (songRepo.findById(songId).get().getTags().contains(tag)) {
+				return;
+			} else {
+				tag.addSong(song);
+				tag = tagRepo.save(tag);
+				song.addTag(tag);
+				songRepo.save(song);
+			}
+		}
+
 	}
 
 	@PostMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/rating/add")
