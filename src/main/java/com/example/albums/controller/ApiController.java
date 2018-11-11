@@ -190,8 +190,9 @@ public class ApiController {
 
 		Tag tag = new Tag(tagName);
 		tag.addSong(song);
-		songRepo.save(song);
 		tag = tagRepo.save(tag);
+		song.addTag(tag);
+		songRepo.save(song);
 	}
 
 }

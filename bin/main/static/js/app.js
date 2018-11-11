@@ -162,27 +162,29 @@ function showSongs(allSongs, artistId, albumId){
 		songSection.appendChild(commentSection)
 		const submitButton = document.querySelector(`.comment-submit-${song.id}`)
 		submitButton.addEventListener('click', () => {
-			makeComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments/add`,`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}` )
+			makeComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments/add`,
+					`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`, submitButton)
 		}
 		)	
 
 		//show tags SONGS ONLY
-//		const tagSection = document.createElement('section')
-//		tagSection.classList.add(`tags-${song.id}`)
-//		songSection.appendChild(tagSection)
-//		showTags(`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`)
-//		const tagSection2 = document.createElement('section')
-//		const tagFields = `
-//			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
-//			<button class="tag-submit-${song.id}">Submit</button>
-//		`
-//		tagSection2.innerHTML += tagFields
-//		songSection.appendChild(tagSection2)
-//		const tagButton = document.querySelector(`.tag-submit-${song.id}`)
-//		tagButton.addEventListener('click', () =>{
-//			makeTags(`api/${artistId}/albums/${albumId}/songs/${song.id}/tags/add` , `/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}` )
-//		})
-//		
+		const tagSection = document.createElement('section')
+		tagSection.classList.add(`tags-${song.id}`)
+		songSection.appendChild(tagSection)
+		showTags(`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`)
+		const tagSection2 = document.createElement('section')
+		const tagFields = `
+			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
+			<button class="tag-submit-${song.id}">Submit</button>
+		`
+		tagSection2.innerHTML += tagFields
+		songSection.appendChild(tagSection2)
+		const tagButton = document.querySelector(`.tag-submit-${song.id}`)
+		tagButton.addEventListener('click', () =>{
+			makeTags(`api/${artistId}/albums/${albumId}/songs/${song.id}/tags/add` ,
+					`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`, tagButton)
+		})
+		
 	})
 }
 
@@ -284,16 +286,17 @@ fetch(path, {
 }
 
 //make comments
-function makeComments(path, path2, section){
-	const commentUsername = document.querySelector('#commentUsername')
-	const commentContent = document.querySelector('#commentContent')
-	console.log(commentContent)
+function makeComments(path, path2, section, submitButton){
+	const parentSection = submitButton.parentNode
+	const commentUsername = parentSection.querySelector('#commentUsername')
+	const commentContent = parentSection.querySelector('#commentContent')
+	
 	const xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			commentUsername.value = ''
-				commentContent.value = ''
-					showComments(path2, section)
+			commentContent.value = ''
+			showComments(path2, section)
 		}
 	}
 	xhttp.open("POST", path, true); //this is what "this.responseText" is
@@ -316,7 +319,9 @@ fetch(path, {
 	})
 	.then(res => res.json())
 	.then(data => {
+		console.log(data)
 		data.forEach(tag =>{
+			console.log(data + 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
 			const section = document.querySelector(className)
 			section.innerHTML += `
 			<p>Tag: </p>
@@ -328,8 +333,9 @@ fetch(path, {
 }
 
 //make tags
-function makeTags(path, path2, section){
-	const tagName = document.querySelector('#tagName')
+function makeTags(path, path2, section, button){
+	const parentElement = button.parentNode
+	const tagName = parentElement.querySelector('#tagName')
 	const xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
