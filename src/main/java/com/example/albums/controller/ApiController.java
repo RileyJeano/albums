@@ -47,7 +47,7 @@ public class ApiController {
 		return (Collection<Artist>) artistRepo.findAll();
 	}
 
-	@GetMapping("api/artists/{artistId}/tags")
+	@GetMapping("api/{artistId}/tags")
 	public Collection<Tag> showArtistsTags(@PathVariable(value = "artistId") Long artistId) {
 		return artistRepo.findById(artistId).get().getTags();
 	}
@@ -69,7 +69,7 @@ public class ApiController {
 		return albumRepo.findById(albumId).get().getComments();
 	}
 
-	@GetMapping("api/artists/{artistId}/comments")
+	@GetMapping("api/{artistId}/comments")
 	public Collection<Comment> showArtistsComment(@PathVariable(value = "artistId") Long artistId) {
 		return artistRepo.findById(artistId).get().getComments();
 	}
@@ -135,7 +135,7 @@ public class ApiController {
 		artist = artistRepo.save(artist);
 	}
 
-	@PostMapping("/api/artists/{id}/albums/add")
+	@PostMapping("/api/{id}/albums/add")
 	public void addAlbum(@PathVariable(value = "id") Long id, @RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(id).get();
 		JSONObject json = new JSONObject(content);
@@ -146,7 +146,7 @@ public class ApiController {
 		album = albumRepo.save(album);
 	}
 
-	@PostMapping("/api/artists/{artistId}/albums/{albumId}/songs/add")
+	@PostMapping("/api/{artistId}/albums/{albumId}/songs/add")
 	public void addSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
 			@RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(artistId).get();
@@ -158,7 +158,40 @@ public class ApiController {
 
 		Song song = new Song(songName, songLink, songLength, album);
 		song = songRepo.save(song);
+	}
 
+	@PostMapping("api/{artistId}/albums/{albumId}/songs/{songId}/comments/add")
+	public void addCommentOnASong(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		Song song = songRepo.findById(songId).get();
+		JSONObject json = new JSONObject(content);
+		String userName = json.getString("name");
+		String commentContent = json.getString("content");
+
+		Comment comment = new Comment(userName, commentContent);
+		comment.addSong(song);
+		// song.add
+		songRepo.save(song);
+		comment = commentRepo.save(comment);
+	}
+
+	@PostMapping("api/{artistId}/albums/{albumId}/songs/{songId}/tags/add")
+	public void addTagOnASong(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		Song song = songRepo.findById(songId).get();
+		JSONObject json = new JSONObject(content);
+		String tagName = json.getString("tagName");
+
+		Tag tag = new Tag(tagName);
+		tag.addSong(song);
+		songRepo.save(song);
+		tag = tagRepo.save(tag);
 	}
 
 }

@@ -145,12 +145,47 @@ function showSongs(allSongs, artistId, albumId){
 		songHeader.innerText = `${song.name} - ${song.length}`
 //add an event listener here so that songs can display their length, etc...
 		songSection.appendChild(songHeader)
+	
+		//show comments SONGS ONLY
 		const section = document.createElement('section')
 		section.classList.add(`comments-${song.id}`)
 		songSection.appendChild(section)
 		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`)
+		const commentSection = document.createElement('section')
+		
+		const commentFields = `
+			<label> Comment Username: <input id="commentUsername" type="text" name="commentUsername"/> </label>
+			<label> Comment Content: <input id="commentContent" type="text" name="commentContent"/> </label>
+			<button class="comment-submit-${song.id}">Submit</button>
+		`
+		commentSection.innerHTML += commentFields
+		songSection.appendChild(commentSection)
+		const submitButton = document.querySelector(`.comment-submit-${song.id}`)
+		submitButton.addEventListener('click', () => {
+			makeComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments/add`,`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}` )
+		}
+		)	
+
+		//show tags SONGS ONLY
+//		const tagSection = document.createElement('section')
+//		tagSection.classList.add(`tags-${song.id}`)
+//		songSection.appendChild(tagSection)
+//		showTags(`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`)
+//		const tagSection2 = document.createElement('section')
+//		const tagFields = `
+//			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
+//			<button class="tag-submit-${song.id}">Submit</button>
+//		`
+//		tagSection2.innerHTML += tagFields
+//		songSection.appendChild(tagSection2)
+//		const tagButton = document.querySelector(`.tag-submit-${song.id}`)
+//		tagButton.addEventListener('click', () =>{
+//			makeTags(`api/${artistId}/albums/${albumId}/songs/${song.id}/tags/add` , `/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}` )
+//		})
+//		
 	})
 }
+
 
 
 
@@ -226,15 +261,21 @@ function addNewSong() {
 }
 
 ////////////////////ADDING AND REMOVING Comments //////////////////////////////////////
+//show comments
 function showComments(path, className){ 
+const section = document.querySelector(className)
+section.innerHTML = ""
 fetch(path, {
 		method: 'get'
 	})
 	.then(res => res.json())
 	.then(data => {
+		console.log(data)
 		data.forEach(comment =>{
-			const section = document.querySelector(className)
 			section.innerHTML += `
+			<p>Comment UserName: </p>
+			<p>${comment.username}</p>
+			<p>Comment: </p>
 			<p>${comment.content}</p>
 			`
 		})
@@ -242,17 +283,69 @@ fetch(path, {
 	
 }
 
-
-//fetch(`/api/1/albums/3/songs/4/comments`, {
-//		method: 'get'
-//	})
-//	.then(res => res.json())
-//	.then(data => {
-//		data.forEach(comment =>{
-//			const section = document.querySelector('.comments')
-//			section.innerHTML += `
-//			<p>${comment.content}</p>
-//			`
-//		})
-//	})
+//make comments
+function makeComments(path, path2, section){
+	const commentUsername = document.querySelector('#commentUsername')
+	const commentContent = document.querySelector('#commentContent')
+	console.log(commentContent)
+	const xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			commentUsername.value = ''
+				commentContent.value = ''
+					showComments(path2, section)
+		}
+	}
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
+	const content = JSON.stringify({
+		name: commentUsername.value,
+		content: commentContent.value,
+	})
+		
+	xhttp.send(content)
+	//showcommentshere
 	
+}
+
+
+
+////////////////////ADDING AND REMOVING Tags //////////////////////////////////////
+function showTags(path, className){ 
+fetch(path, {
+		method: 'get'
+	})
+	.then(res => res.json())
+	.then(data => {
+		data.forEach(tag =>{
+			const section = document.querySelector(className)
+			section.innerHTML += `
+			<p>Tag: </p>
+			<p>${tag.tagName}</p>
+			`
+		})
+	})
+	
+}
+
+//make tags
+function makeTags(path, path2, section){
+	const tagName = document.querySelector('#tagName')
+	const xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			tagName.value = ''
+			showTags(path2, section)
+		}
+	}
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
+	const content = JSON.stringify({
+		tagName: tagName.value,
+	})
+		
+	xhttp.send(content)
+	//showcommentshere
+	
+}
+
+
+
