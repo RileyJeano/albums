@@ -192,49 +192,46 @@ function showSongs(allSongs, artistId, albumId){
 		const ratingHTML = `<p>Rating: ${song.rating}</p>`
 		songHeader.innerHTML += ratingHTML
 		//add ratings
-		
 		const ratingFields = `
-			<button class="rating-submit-${song.id}">&#8679;</button>
-		`
+			<button class="rating-submit-${song.id}">&#8679;</button>`
 		songHeader.innerHTML += ratingFields
 		const increaseRatingButton = document.querySelector(`.rating-submit-${song.id}`)
-		
 		increaseRatingButton.addEventListener('click', () => {
-			console.log('Maaaaaaaaax')
 			const newRating = (song.rating + 1)
-			console.log(newRating)
 			fetch(`/api/${artistId}/albums/${albumId}/songs/${song.id}/rating/add`, {
 				method: `POST`,
 				body: newRating
 			})
-			.then(res => res.json())
+			.then()
 			.then(data =>{
 				getSongs(albumId, artistId)
 			})
-			ratingHTML.innerHTML = `<p>Rating: ${song.rating}</p>`
+			getSongs(albumId, artistId)
 		})
 	}) //end of songs.forEach
 
 	//Display add a song section
 	//THIS SHIT IS BAD MAX SERIOUSLY WE GOTTA FIX IT FIRST
-//	const addSongHtml = `
-//		<section class="addSong">
-//			<h1>Add Song:</h1>
-//			<label> Song Name: <input id="songName" type="text" name="songName"/> </label>
-//			<label> Song Length: <input id="songLength" type="text" name="songLength"/> </label>
-//			<label> Song Link: <input id="songLink" type="text" name="songLink"/> </label>
-//			<button class="songSubmit">Submit</button>
-//		</section>`
-//	songSection.innerHTML += addSongHtml
-//	const songSubmitButton = songSection.querySelector('.songSubmit')
-//	const songNameField = songSection.querySelector('#songName')
-//	const songLengthField = songSection.querySelector('#songLength')
-//	const songLinkField = songSection.querySelector('#songLink')
-//	songSubmitButton.addEventListener('click', ()=>{
-//		const path = `/api/${artistId}/albums/${albumId}/songs/add`
-//		addNewSong(songNameField, songLengthField, songLinkField, path, allSongs, artistId, albumId)
-//	})
-//	
+	const addSongHtml = `
+		<section class="addSong">
+			<h1>Add Song:</h1>
+			<label> Song Name: <input id="songName" type="text" name="songName"/> </label>
+			<label> Song Length: <input id="songLength" type="text" name="songLength"/> </label>
+			<label> Song Link: <input id="songLink" type="text" name="songLink"/> </label>
+			<button class="songSubmit">Submit</button>
+		</section>`
+	const songAdditionSection = document.createElement('section')
+	songSection.appendChild(songAdditionSection)
+	songAdditionSection.innerHTML += addSongHtml
+	const songSubmitButton = songSection.querySelector('.songSubmit')
+	const songNameField = songSection.querySelector('#songName')
+	const songLengthField = songSection.querySelector('#songLength')
+	const songLinkField = songSection.querySelector('#songLink')
+	songSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/${artistId}/albums/${albumId}/songs/add`
+		addNewSong(songNameField, songLengthField, songLinkField, path, allSongs, artistId, albumId)
+	})
+
 
 	
 }
