@@ -195,4 +195,13 @@ public class ApiController {
 		songRepo.save(song);
 	}
 
+	@PostMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/rating/add")
+	public void increaseSongRating(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Song song = songRepo.findById(songId).get();
+		System.out.println("MAXMAXMAX");
+		song.setRating(song.getRating() + 1);
+		songRepo.save(song);
+	}
 }

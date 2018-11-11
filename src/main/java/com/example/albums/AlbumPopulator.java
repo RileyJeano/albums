@@ -45,6 +45,8 @@ public class AlbumPopulator implements CommandLineRunner {
 
 		Song song1 = new Song("Termites in Me Peg Leg", "google.com", "30 hrs.", album1);
 		song1 = songRepo.save(song1);
+		song1.setRating(1000);
+		song1 = songRepo.save(song1);
 
 		Song song2 = new Song("You keelhawled my heart", "google.com", "3:45", album1);
 		song2 = songRepo.save(song2);
