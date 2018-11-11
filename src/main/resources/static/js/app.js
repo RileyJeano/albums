@@ -167,8 +167,7 @@ function showSongs(allSongs, artistId, albumId){
 		submitButton.addEventListener('click', () => {
 			makeComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments/add`,
 					`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`, submitButton)
-		}
-		)	
+		})	
 
 		//show tags SONGS ONLY
 		const tagSection = document.createElement('section')
@@ -211,7 +210,6 @@ function showSongs(allSongs, artistId, albumId){
 	}) //end of songs.forEach
 
 	//Display add a song section
-	//THIS SHIT IS BAD MAX SERIOUSLY WE GOTTA FIX IT FIRST
 	const addSongHtml = `
 		<section class="addSong">
 			<h1>Add Song:</h1>
@@ -241,13 +239,13 @@ function showSongs(allSongs, artistId, albumId){
 
 ////////////////////  ADDING NEW DATA //////////////////////////////////////
 
-artistSubmitButton.addEventListener('click', ()=>{
-	addANewArtist()
-})
-
-albumSubmitButton.addEventListener('click', () => {
-	addANewAlbum()
-})
+//artistSubmitButton.addEventListener('click', ()=>{
+//	addANewArtist()
+//})
+//
+//albumSubmitButton.addEventListener('click', () => {
+//	addANewAlbum()
+//})
 
 
 function addANewArtist(){
@@ -369,8 +367,12 @@ fetch(path, {
 			const section = document.querySelector(className)
 			section.innerHTML += `
 			<p>Tag: </p>
-			<p>${tag.tagName}</p>
+			<p class="tag">${tag.tagName}</p>
 			`
+
+			section.querySelector('.tag').addEventListener('click', function(){
+				showTagView(tag)
+			})
 		})
 	})
 	
@@ -397,5 +399,27 @@ function makeTags(path, path2, section, button){
 	
 }
 
-
+//////////Show The Elemenets that belong to a tag //////////////////////////////////
+function showTagView(tag){
+	clearSections()
+	const list = document.createElement('ul')
+	console.log(tag.songs)
+	tag.artists.forEach(artist =>{
+		const li = `
+		<li>${artist.name}</li>`
+		list.innerHTML += li
+	})
+	tag.albums.forEach(album =>{
+		const li = `
+		<li>${album.name}</li>`
+		list.innerHTML += li
+	})
+	tag.songs.forEach(song =>{
+		const li = `
+		<li>${song.name}</li>`
+		list.innerHTML += li
+	})
+	artistSection.appendChild(list)
+	console.log(list.innerHTML)
+}
 

@@ -107,6 +107,11 @@ public class ApiController {
 		return (Collection<Tag>) tagRepo.findAll();
 	}
 
+	@GetMapping("/api/tags/{id}")
+	public Tag returnATag(@PathVariable(value = "id") Long id) {
+		return tagRepo.findById(id).get();
+	}
+
 	@GetMapping("/api/comments")
 	public Collection<Comment> showComments() {
 		return (Collection<Comment>) commentRepo.findAll();
