@@ -170,7 +170,7 @@ function showAlbums(allAlbums, artistId){
 		submitButton.addEventListener('click', () => {
 			makeComments(`/api/${artistId}/albums/${album.id}/comments/add`,
 					`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`, submitButton)
-		})	
+		})
 		//show tags
 const tagSection = document.createElement('section')
 		tagSection.classList.add(`tags-${album.id}`)
@@ -198,17 +198,17 @@ const ratingFields = `
 		albumHeader.innerHTML += ratingFields
 		const increaseRatingButton = document.querySelector(`.rating-submit-${album.id}`)
 		increaseRatingButton.addEventListener('click', () => {
-			const newRating = (artist.rating + 1)
+			const newRating = (album.rating + 1)
 			fetch(`/api/${artistId}/albums/${album.id}/rating/add`, {
 				method: `POST`,
 				body: newRating
 			})
 			.then()
 			.then(data =>{
-				getAlbum(artistId)
+				getAlbums(artistId)
 
 			})
-			getAlbum(artistId)
+			getAlbums(artistId)
 		})
 	})
 }

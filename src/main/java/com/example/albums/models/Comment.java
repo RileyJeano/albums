@@ -21,7 +21,7 @@ public class Comment {
 	@ManyToOne
 	private Artist artist;
 
-	@JsonIgnore
+
 	@ManyToOne
 	private Album album;
 
