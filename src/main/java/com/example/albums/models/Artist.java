@@ -26,6 +26,7 @@ public class Artist {
 	@OneToMany(mappedBy = "artist")
 	private Collection<Album> albums = new HashSet<>();
 
+	@JsonIgnore
 	@ManyToMany
 	private Collection<Tag> tags = new HashSet<>();
 
