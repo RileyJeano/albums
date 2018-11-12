@@ -80,7 +80,7 @@ function showArtists(allArtists) {
 const tagSection = document.createElement('section')
 		tagSection.classList.add(`tags-${artist.id}`)
 		artistSection.appendChild(tagSection)
-		showTags(`/api/${artist.id/tags`, `.tags-${artist.id}`)
+		showTags(`/api/${artist.id}/tags`, `.tags-${artist.id}`)
 		const tagSection2 = document.createElement('section')
 		const tagFields = `
 			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
@@ -199,7 +199,7 @@ function showAlbums(allAlbums, artistId){
 const tagSection = document.createElement('section')
 		tagSection.classList.add(`tags-${album.id}`)
 		albumSection.appendChild(tagSection)
-		showTags(`/api/${artistId/albums/${album.id}/tags`, `.tags-${album.id}`)
+		showTags(`/api/${artistId}/albums/${album.id}/tags`, `.tags-${album.id}`)
 		const tagSection2 = document.createElement('section')
 		const tagFields = `
 			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>

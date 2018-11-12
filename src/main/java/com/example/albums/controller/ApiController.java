@@ -63,12 +63,7 @@ public class ApiController {
 		return albumRepo.findById(albumId).get();
 	}
 
-	@GetMapping("/api/{artistId}/albums/{albumId}/comments")
-	public Collection<Comment> showAlbumsComments(@PathVariable(value = "artistId") Long artistId,
-			@PathVariable(value = "albumId") Long albumId) {
-		return albumRepo.findById(albumId).get().getComments();
-	}
-
+//////////////////////////////////////////////////////////////////////???
 	@GetMapping("api/{artistId}/comments")
 	public Collection<Comment> showArtistsComment(@PathVariable(value = "artistId") Long artistId) {
 		return artistRepo.findById(artistId).get().getComments();
@@ -124,11 +119,11 @@ public class ApiController {
 		return songRepo.findById(songId).get().getComments();
 	}
 
-	// comments artist
-	@GetMapping("/api/{artistId}/comments")
-	public Collection<Comment> showArtistComments(@PathVariable(value = "artistId") Long artistId) {
-		return songRepo.findById(artistId).get().getComments();
-	}
+	// comments artist/////////////////////////////////////////////////////
+//	@GetMapping("/api/{artistId}/comments")
+//	public Collection<Comment> showArtistComments(@PathVariable(value = "artistId") Long artistId) {
+//		return songRepo.findById(artistId).get().getComments();
+//	}
 
 	// comments albums
 	@GetMapping("/api/{artistId}/albums/{albumId}/comments")
@@ -209,19 +204,14 @@ public class ApiController {
 	// add comments artist
 	@PostMapping("api/{artistId}/comments/add")
 	public void addCommentOnAArtist(@PathVariable(value = "artistId") Long artistId,
-			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
 			@RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(artistId).get();
-		Album album = albumRepo.findById(albumId).get();
-		Song song = songRepo.findById(songId).get();
 		JSONObject json = new JSONObject(content);
 		String userName = json.getString("name");
 		String commentContent = json.getString("content");
 
 		Comment comment = new Comment(userName, commentContent);
 		comment.addAritst(artist);
-		// song.add
-		artistRepo.save(artist);
 		comment = commentRepo.save(comment);
 	}
 
