@@ -264,11 +264,10 @@ public class ApiController {
 	// ADD TAGS - albums
 	@PostMapping("api/{artistId}/albums/{albumId}/tags/add")
 	public void addTagOnAAlbum(@PathVariable(value = "artistId") Long artistId,
-			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@PathVariable(value = "albumId") Long albumId,
 			@RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(artistId).get();
 		Album album = albumRepo.findById(albumId).get();
-		Song song = songRepo.findById(songId).get();
 		JSONObject json = new JSONObject(content);
 		String tagName = json.getString("tagName");
 
@@ -283,7 +282,7 @@ public class ApiController {
 		else {
 			Tag tag = tagRepo.findByTagName(tagName);
 			// if this tag is already applied to this song
-			if (albumRepo.findById(songId).get().getTags().contains(tag)) {
+			if (albumRepo.findById(albumId).get().getTags().contains(tag)) {
 				return;
 			} else {
 				tag.addAlbum(album);
