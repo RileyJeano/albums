@@ -114,6 +114,29 @@ function showArtists(allArtists) {
 			})
 			getArtists()
 		})
+	}) //end of allArtists.forEach
+	//Display add an artist section
+	const addArtistHtml = `
+		<section class="addArtist">
+			<h1>Add Artist:</h1>
+			<label> Name: <input id="name" type="text" name="name"/> </label>
+			<label> Image: <input id="image" type="text" name="image"/> </label>
+			<label> Age: <input id="age" type="text" name="age"/> </label>
+			<label> Home: <input id="home" type="text" name="home"/> </label>
+			<button class="artistSubmit">Submit</button>
+		</section>`
+	const artistAdditionSection = document.createElement('section')
+	artistSection.appendChild(artistAdditionSection)
+	artistAdditionSection.innerHTML += addArtistHtml
+	const artistSubmitButton = artistSection.querySelector('.artistSubmit')
+	const artistNameField = artistSection.querySelector('#name')
+	const artistImageField = artistSection.querySelector('#image')
+	const artistAgeField = artistSection.querySelector('#age')
+	const artistHomeField = artistSection.querySelector('#home')
+
+	artistSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/artist/add`
+		addANewArtist(path, artistNameField, artistImageField, artistAgeField, artistHomeField)
 	})
 }
 
@@ -351,31 +374,24 @@ function showSongs(allSongs, artistId, albumId){
 
 ////////////////////  ADDING NEW DATA //////////////////////////////////////
 
-//artistSubmitButton.addEventListener('click', ()=>{
-//	addANewArtist()
-//})
-//
-//albumSubmitButton.addEventListener('click', () => {
-//	addANewAlbum()
-//})
 
-
-function addANewArtist(){
+function addANewArtist(path, artistNameField, artistImageField, artistAgeField, artistHomeField){
 	const xhttp = new XMLHttpRequest();
-	xhttp.open("POST", `/api/add`, true); //this is what this.responseText is
+	xhttp.open("POST", path, true); //this is what this.responseText is
 	const artist = JSON.stringify({
-		name: artistName.value,
-		image: artistImage.value,
-		age: artistAge.value,
-		home: artistHome.value,
+		name: artistNameField.value,
+		image: artistImageField.value,
+		age: artistAgeField.value,
+		home: artistHomeField.value,
 	})
 	xhttp.send(artist)
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			artistName.value=''
-			artistImage.value=''
-			artistAge.value=''
-			artistHome.value = ''
+			artistNameField.value=''
+			artistImageField.value=''
+			artistAgeField.value=''
+			artistHomeField.value = ''
+			getArtists()
 		}
 	}
 }
