@@ -1,0 +1,6 @@
+.eachSongSection {
+	border: 1px solid var(--light);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 1rem;
+}
