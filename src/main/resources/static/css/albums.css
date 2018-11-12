@@ -1,7 +1,13 @@
-h3 {
+.album-link {
+	cursor: pointer;
 	display: flex;
 	flex-direction: column;
 }
+	.album-link:hover {
+			background-color: rgba(1,1,1,0.8);
+
+		}
+
 
 .eachAlbumSection {
 	border: 1px solid var(--light);

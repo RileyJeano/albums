@@ -103,7 +103,8 @@ function showArtists(allArtists) {
 
 		//show comments
 		const section = document.createElement('section')
-		section.classList.add(`comments-${artist.id}`) //THIS COMES IN HANDY MUCH LATER, DON'T DELETE IT!
+		section.classList.add(`comments-${artist.id}`)
+		section.classList.add('comments-list')
 		eachArtistSection.appendChild(section)
 		showComments(`/api/${artist.id}/comments`, `.comments-${artist.id}`)
 		const commentSection = document.createElement('section')
@@ -177,7 +178,8 @@ function showAlbums(allAlbums, artistId){
 		const eachAlbumSection = document.createElement('section')
 		eachAlbumSection.classList.add('eachAlbumSection')
 		albumSection.appendChild(eachAlbumSection)
-		const albumHeader = document.createElement('h3')
+		const albumHeader = document.createElement('h2')
+		albumHeader.classList.add('album-link')
 		albumHeader.innerText = album.name
 		albumHeader.innerHTML += `<img src='/images/${album.image}'></img>`
 		albumHeader.addEventListener('click', function(){
@@ -231,6 +233,7 @@ function showAlbums(allAlbums, artistId){
 		//show comments
 		const section = document.createElement('section')
 		section.classList.add(`comments-${album.id}`)
+		section.classList.add('comments-list')
 		eachAlbumSection.appendChild(section)
 		showComments(`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`)
 		const commentSection = document.createElement('section')
@@ -346,6 +349,7 @@ function showSongs(allSongs, artistId, albumId){
 		//show comments SONGS ONLY
 		const section = document.createElement('section')
 		section.classList.add(`comments-${song.id}`)
+		section.classList.add('comments-list')
 		eachSongSection.appendChild(section)
 		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`)
 		const commentSection = document.createElement('section')
@@ -469,9 +473,7 @@ fetch(path, {
 	.then(data => {
 		data.forEach(comment =>{
 			section.innerHTML += `
-			<p>Comment UserName: </p>
-			<p>${comment.username}</p>
-			<p>Comment: </p>
+			<p>UserName: ${comment.username}</p>
 			<p>${comment.content}</p>
 			`
 		})
@@ -516,12 +518,10 @@ fetch(path, {
 	.then(res => res.json())
 	.then(data => {
 		data.forEach(tag =>{
-			const section = document.querySelector(className)
+//			const section = document.querySelector(className) //thiiiiiiiiis was giving us the duplicate tags
 			section.innerHTML += `
-			<p>Tag: </p>
-			<p class="tag">${tag.tagName}</p>
+			<p class="tag">Tag: ${tag.tagName}</p>
 			`
-
 			section.querySelector('.tag').addEventListener('click', function(){
 				showTagView(tag)
 			})
