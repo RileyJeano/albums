@@ -144,18 +144,20 @@ function showAlbums(allAlbums, artistId){
 	})
 	//then...
 	allAlbums.forEach(album => {
+		const thisAlbumSection = document.createElement('section')
+		albumSection.appendChild(thisAlbumSection)
 		const albumHeader = document.createElement('h3')
 		albumHeader.innerText = album.name
 		albumHeader.innerHTML += `<img src='/images/${album.image}'></img>`
 		albumHeader.addEventListener('click', function(){
 			getSongs(album.id, artistId)
 		})
-		albumSection.appendChild(albumHeader)
+		thisAlbumSection.appendChild(albumHeader)
 
-//show comments
+		//show comments
 		const section = document.createElement('section')
 		section.classList.add(`comments-${album.id}`)
-		albumSection.appendChild(section)
+		thisAlbumSection.appendChild(section)
 		showComments(`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`)
 		const commentSection = document.createElement('section')
 		
@@ -165,16 +167,16 @@ function showAlbums(allAlbums, artistId){
 			<button class="comment-submit-${album.id}">Submit</button>
 		`
 		commentSection.innerHTML += commentFields
-		albumSection.appendChild(commentSection)
+		thisAlbumSection.appendChild(commentSection)
 		const submitButton = document.querySelector(`.comment-submit-${album.id}`)
 		submitButton.addEventListener('click', () => {
 			makeComments(`/api/${artistId}/albums/${album.id}/comments/add`,
 					`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`, submitButton)
 		})	
 		//show tags
-const tagSection = document.createElement('section')
+		const tagSection = document.createElement('section')
 		tagSection.classList.add(`tags-${album.id}`)
-		albumSection.appendChild(tagSection)
+		thisAlbumSection.appendChild(tagSection)
 		showTags(`/api/${artistId}/albums/${album.id}/tags`, `.tags-${album.id}`)
 		const tagSection2 = document.createElement('section')
 		const tagFields = `
@@ -182,7 +184,7 @@ const tagSection = document.createElement('section')
 			<button class="tag-submit-${album.id}">Submit</button>
 		`
 		tagSection2.innerHTML += tagFields
-		albumSection.appendChild(tagSection2)
+		thisAlbumSection.appendChild(tagSection2)
 		const tagButton = document.querySelector(`.tag-submit-${album.id}`)
 		tagButton.addEventListener('click', () =>{
 			makeTags(`api/${artistId}/albums/${album.id}/tags/add` ,
@@ -191,24 +193,25 @@ const tagSection = document.createElement('section')
 
 		// show ratings
 		const ratingHTML = `<p>Rating: ${album.rating}</p>`
-		albumHeader.innerHTML += ratingHTML
+			thisAlbumSection.innerHTML += ratingHTML
 		//add rating
-const ratingFields = `
+		const ratingFields = `
 			<button class="rating-submit-${album.id}">&#8679;</button>`
-		albumHeader.innerHTML += ratingFields
+		//ADD THIS TO NOT THE HEADER 
+			thisAlbumSection.innerHTML += ratingFields
 		const increaseRatingButton = document.querySelector(`.rating-submit-${album.id}`)
 		increaseRatingButton.addEventListener('click', () => {
-			const newRating = (artist.rating + 1)
+			const newRating = (album.rating + 1)
 			fetch(`/api/${artistId}/albums/${album.id}/rating/add`, {
 				method: `POST`,
 				body: newRating
 			})
 			.then()
 			.then(data =>{
-				getAlbum(artistId)
+				getAlbums(artistId)
 
 			})
-			getAlbum(artistId)
+			getAlbums(artistId)
 		})
 	})
 }
