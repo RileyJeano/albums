@@ -211,6 +211,24 @@ function showAlbums(allAlbums, artistId){
 			})
 			getAlbums(artistId)
 		})
+	}) //end of albums.forEach
+	//Display add an album section
+	const addAlbumHtml = `
+		<section class="addAlbum">
+			<h1>Add Album:</h1>
+			<label> Album Name: <input id="name" type="text" name="name"/> </label>
+			<label> Image: <input id="image" type="text" name="image"/> </label>
+			<button class="albumSubmit">Submit</button>
+		</section>`
+	const albumAdditionSection = document.createElement('section')
+	albumSection.appendChild(albumAdditionSection)
+	albumAdditionSection.innerHTML += addAlbumHtml
+	const albumSubmitButton = albumSection.querySelector('.albumSubmit')
+	const albumNameField = albumSection.querySelector('#name')
+	const albumImageField = albumSection.querySelector('#image')
+	albumSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/${artistId}/albums/add`
+		addANewAlbum(albumNameField, albumImageField, path, allAlbums, artistId)
 	})
 }
 
@@ -363,18 +381,19 @@ function addANewArtist(){
 }
 
 
-function addANewAlbum(){
+function addANewAlbum(albumNameField, albumImageField, path, allAlbums, artistId){
 	const xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			albumName.value = ''
-			albumImage.value = ''
+			albumNameField.value = ''
+			albumImageField.value = ''
+			getAlbums(artistId)
 		}
 	}
-	xhttp.open("POST", `/api/1/albums/add`, true); //this is what "this.responseText" is
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
 	const content = JSON.stringify({
-		name: albumName.value,
-		image: albumImage.value,
+		name: albumNameField.value,
+		image: albumImageField.value,
 	})
 	xhttp.send(content)
 }
