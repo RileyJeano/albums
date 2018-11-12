@@ -32,6 +32,7 @@ public class Album {
 	@ManyToMany
 	private Collection<Tag> tags = new HashSet<Tag>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "album")
 	private Collection<Comment> comments = new HashSet<Comment>();
 

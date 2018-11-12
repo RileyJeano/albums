@@ -77,7 +77,7 @@ function showArtists(allArtists) {
 					`/api/${artist.id}/comments`, `.comments-${artist.id}`, submitButton)
 		})	
 		//show tags
-const tagSection = document.createElement('section')
+		const tagSection = document.createElement('section')
 		tagSection.classList.add(`tags-${artist.id}`)
 		artistSection.appendChild(tagSection)
 		showTags(`/api/${artist.id}/tags`, `.tags-${artist.id}`)
@@ -114,30 +114,6 @@ const tagSection = document.createElement('section')
 			})
 			getArtists()
 		})
-		//const tagSectionArtist = document.createElement('section')
-		//tagSectionArtist.classList.add("artistTag")
-		//const tagButtonArtist = document.createElement('button')
-		//tagButtonArtist.classList.add("artistButton")
-		//tagButtonArtist.innerText = "Submit"
-		//const tagInputArtist = document.createElement('input')
-		//tagInputArtist.type = "text"
-		//tagInputArtist.name="artistTag"
-		//const tagInputArtistHidden = document.createElement('input')
-		//tagInputArtistHidden.type = "hidden"
-		//tagInputArtistHidden.value = artist.id
-		//tagInputArtist.name="artistTagHidden";
-		
-		//const tags = getTags(`/api/artists/${artist.id}/tags`)
-		//console.log('this is what we feed to getTagHtml()')
-	//	console.log(tags)
-		//const tagHtml = getTagHtml(tags)
-//		tagSectionArtist.appendChild(tagHtml)
-		
-	//	tagSectionArtist.appendChild(tagInputArtist)
-	//	tagSectionArtist.appendChild(tagInputArtistHidden)
-	//	tagSectionArtist.appendChild(tagButtonArtist)
-		
-		//artistSection.appendChild(tagSectionArtist)
 	})
 }
 
@@ -180,7 +156,7 @@ function showAlbums(allAlbums, artistId){
 		const section = document.createElement('section')
 		section.classList.add(`comments-${album.id}`)
 		albumSection.appendChild(section)
-		showComments(`/api/${artistId}/ablums/${album.id}/comments`, `.comments-${album.id}`)
+		showComments(`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`)
 		const commentSection = document.createElement('section')
 		
 		const commentFields = `
@@ -192,7 +168,7 @@ function showAlbums(allAlbums, artistId){
 		albumSection.appendChild(commentSection)
 		const submitButton = document.querySelector(`.comment-submit-${album.id}`)
 		submitButton.addEventListener('click', () => {
-			makeComments(`/api/${artistId}/albums/${album.id}comments/add`,
+			makeComments(`/api/${artistId}/albums/${album.id}/comments/add`,
 					`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`, submitButton)
 		})	
 		//show tags
