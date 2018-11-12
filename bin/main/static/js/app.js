@@ -96,11 +96,11 @@ const tagSection = document.createElement('section')
 
 		// show ratings
 		const ratingHTML = `<p>Rating: ${artist.rating}</p>`
-		artistHeader.innerHTML += ratingHTML
+		section.innerHTML += ratingHTML
 		//add rating
-const ratingFields = `
+		const ratingFields = `
 			<button class="rating-submit-${artist.id}">&#8679;</button>`
-		artistHeader.innerHTML += ratingFields
+		section.innerHTML += ratingFields
 		const increaseRatingButton = document.querySelector(`.rating-submit-${artist.id}`)
 		increaseRatingButton.addEventListener('click', () => {
 			const newRating = (artist.rating + 1)
@@ -110,9 +110,9 @@ const ratingFields = `
 			})
 			.then()
 			.then(data =>{
-				getArtist()
+				getArtists()
 			})
-			getArtist()
+			getArtists()
 		})
 		//const tagSectionArtist = document.createElement('section')
 		//tagSectionArtist.classList.add("artistTag")
