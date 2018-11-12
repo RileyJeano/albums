@@ -55,7 +55,7 @@ public class Tag {
 		albums.add(album);
 	}
 
-	public Collection<Album> getAlbum() {
+	public Collection<Album> getAlbums() {
 		return albums;
 	}
 
@@ -63,7 +63,7 @@ public class Tag {
 		songs.add(song);
 	}
 
-	public Collection<Song> getSong() {
+	public Collection<Song> getSongs() {
 		return songs;
 	}
 }

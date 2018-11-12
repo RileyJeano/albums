@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+:root {
+
+	--light: #D0D4D7;
+	--color-1: #BE9363;
+	--color-2: #BEA384;
+	--grey: #695755;
+	--dark: #2E3E3D;
+
+	background-color: var(--dark);
+	color: var(--light);
+
+}
+
+*{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+
+	line-height: 1.618;
+	list-style: none;
+	font-family: 'Open Sans', sans-serif;
+	text-decoration: none;
+
+}
+
+button {
+	background-color: var(--light);
+	border: none;
+	cursor: pointer;
+}
+
+header {
+	font-weight: bold;
+	display: flex;
+	color: var(--color-1);
+}
+	.header-arrows {
+		color: var(--color-2);
+	}
+
+input {
+	background-color: var(--light);
+	border: none;
+	outline: none;
+}
+
+
+.comments-list {
+	border: 1px solid var(--light);
+}

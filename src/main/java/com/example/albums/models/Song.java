@@ -27,6 +27,7 @@ public class Song {
 	@ManyToOne
 	private Album album;
 
+	@JsonIgnore
 	@ManyToMany
 	private Collection<Tag> tags = new HashSet<>();
 

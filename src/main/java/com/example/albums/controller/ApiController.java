@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.albums.models.Album;
 import com.example.albums.models.Artist;
+import com.example.albums.models.Comment;
 import com.example.albums.models.Song;
 import com.example.albums.models.Tag;
 import com.example.albums.repository.AlbumRepository;
@@ -41,14 +42,10 @@ public class ApiController {
 	@Autowired
 	TagRepository tagRepo;
 
+	
 	@GetMapping("/api/artists")
 	public Collection<Artist> showArtists() {
 		return (Collection<Artist>) artistRepo.findAll();
-	}
-
-	@GetMapping("api/artists/{artistId}/tags")
-	public Collection<Tag> showArtistsTags(@PathVariable(value = "artistId") Long artistId) {
-		return artistRepo.findById(artistId).get().getTags();
 	}
 
 	@GetMapping("/api/{artistId}/albums")
@@ -62,11 +59,11 @@ public class ApiController {
 		return albumRepo.findById(albumId).get();
 	}
 
-	@GetMapping("/api/{artistId}/albums/{albumId}/tags")
-	public Collection<Tag> showAlbumsTags(@PathVariable(value = "artistId") Long artistId,
-			@PathVariable(value = "albumId") Long albumId) {
-		return albumRepo.findById(albumId).get().getTags();
+	@GetMapping("api/{artistId}/comments")
+	public Collection<Comment> showArtistsComment(@PathVariable(value = "artistId") Long artistId) {
+		return artistRepo.findById(artistId).get().getComments();
 	}
+
 
 	@GetMapping("/api/{artistId}/albums/{albumId}/songs")
 	public Collection<Song> showAnAlbumsSongs(@PathVariable(value = "artistId") Long artistId,
@@ -74,16 +71,11 @@ public class ApiController {
 		return (Collection<Song>) albumRepo.findById(albumId).get().getSongs();
 	}
 
+
 	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}")
 	public Song showSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
 			@PathVariable(value = "songId") Long songId) {
 		return songRepo.findById(songId).get();
-	}
-
-	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/tags")
-	public Collection<Tag> showSongTags(@PathVariable(value = "artistId") Long artistId,
-			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId) {
-		return songRepo.findById(songId).get().getTags();
 	}
 
 	@GetMapping("/api/albums")
@@ -101,6 +93,56 @@ public class ApiController {
 		return (Collection<Tag>) tagRepo.findAll();
 	}
 
+	@GetMapping("/api/tags/{id}")
+	public Tag returnATag(@PathVariable(value = "id") Long id) {
+		return tagRepo.findById(id).get();
+	}
+
+	@GetMapping("/api/comments")
+	public Collection<Comment> showComments() {
+		return (Collection<Comment>) commentRepo.findAll();
+	}
+
+	// COMMENTS - song
+	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/comments")
+	public Collection<Comment> showSongComments(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId) {
+		return songRepo.findById(songId).get().getComments();
+	}
+
+	// COMMENTS - album
+	@GetMapping("/api/{artistId}/albums/{albumId}/comments")
+	public Collection<Comment> showAlbumComments(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId) {
+		return albumRepo.findById(albumId).get().getComments();
+	}
+
+	
+	// TAGS - artist
+	@GetMapping("api/{artistId}/tags")
+	public Collection<Tag> showArtistsTags(@PathVariable(value = "artistId") Long artistId) {
+		return artistRepo.findById(artistId).get().getTags();
+	}
+	
+	//TAGS - album
+	@GetMapping("/api/{artistId}/albums/{albumId}/tags")
+	public Collection<Tag> showAlbumsTags(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId) {
+		return albumRepo.findById(albumId).get().getTags();
+	}
+
+	// TAGS - song
+	@GetMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/tags")
+	public Collection<Tag> showSongTags(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId) {
+		return songRepo.findById(songId).get().getTags();
+	}
+
+	
+	////////////////////////////////POST MAPPINGS/////////////////////////////////////////////////
+	
+	
+	//ADD artist
 	@PostMapping("/api/artist/add")
 	public void addArtist(@RequestBody String artistContent) throws JSONException {
 		JSONObject json = new JSONObject(artistContent);
@@ -112,7 +154,8 @@ public class ApiController {
 		artist = artistRepo.save(artist);
 	}
 
-	@PostMapping("/api/artists/{id}/albums/add")
+	//ADD album
+	@PostMapping("/api/{id}/albums/add")
 	public void addAlbum(@PathVariable(value = "id") Long id, @RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(id).get();
 		JSONObject json = new JSONObject(content);
@@ -122,8 +165,9 @@ public class ApiController {
 		Album album = new Album(albumName, albumImage, artist);
 		album = albumRepo.save(album);
 	}
-
-	@PostMapping("/api/artists/{artistId}/albums/{albumId}/songs/add")
+	
+	//ADD song
+	@PostMapping("/api/{artistId}/albums/{albumId}/songs/add")
 	public void addSong(@PathVariable(value = "artistId") Long artistId, @PathVariable(value = "albumId") Long albumId,
 			@RequestBody String content) throws JSONException {
 		Artist artist = artistRepo.findById(artistId).get();
@@ -132,10 +176,186 @@ public class ApiController {
 		String songName = json.getString("name");
 		String songLength = json.getString("length");
 		String songLink = json.getString("link");
-
+		
 		Song song = new Song(songName, songLink, songLength, album);
 		song = songRepo.save(song);
+	}
 
+	// ADD COMMENTS - artist
+	@PostMapping("api/{artistId}/comments/add")
+	public void addCommentOnAArtist(@PathVariable(value = "artistId") Long artistId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		JSONObject json = new JSONObject(content);
+		String userName = json.getString("name");
+		String commentContent = json.getString("content");
+
+		Comment comment = new Comment(userName, commentContent);
+		comment.addAritst(artist);
+		comment = commentRepo.save(comment);
+	}
+	
+	// ADD COMMENTS - album
+	@PostMapping("api/{artistId}/albums/{albumId}/comments/add")
+	public void addCommentOnAAlbum(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		JSONObject json = new JSONObject(content);
+		String userName = json.getString("name");
+		String commentContent = json.getString("content");
+		
+		Comment comment = new Comment(userName, commentContent);
+		comment.addAlbum(album);
+		comment = commentRepo.save(comment);
+	}
+	
+	// ADD COMMENTS - song
+	@PostMapping("api/{artistId}/albums/{albumId}/songs/{songId}/comments/add")
+	public void addCommentOnASong(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		Song song = songRepo.findById(songId).get();
+		JSONObject json = new JSONObject(content);
+		String userName = json.getString("name");
+		String commentContent = json.getString("content");
+		
+		Comment comment = new Comment(userName, commentContent);
+		comment.addSong(song);
+		// song.add
+		songRepo.save(song);
+		comment = commentRepo.save(comment);
+	}
+
+	// ADD TAGS - artists
+	@PostMapping("api/{artistId}/tags/add")
+	public void addTagOnAArtist(@PathVariable(value = "artistId") Long artistId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		JSONObject json = new JSONObject(content);
+		String tagName = json.getString("tagName");
+
+		if (tagRepo.findByTagName(tagName) == null) {
+			Tag tag = new Tag(tagName);
+			tag.addArtist(artist);
+			tag = tagRepo.save(tag);
+			artist.addTag(tag);
+			artistRepo.save(artist);
+		}
+
+		else {
+			Tag tag = tagRepo.findByTagName(tagName);
+			// if this tag is already applied to this song
+			if (artistRepo.findById(artistId).get().getTags().contains(tag)) {
+				return;
+			} else {
+				tag.addArtist(artist);
+				tag = tagRepo.save(tag);
+				artist.addTag(tag);
+				artistRepo.save(artist);
+			}
+		}
+
+	}
+
+	// ADD TAGS - albums
+	@PostMapping("api/{artistId}/albums/{albumId}/tags/add")
+	public void addTagOnAAlbum(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		JSONObject json = new JSONObject(content);
+		String tagName = json.getString("tagName");
+
+		if (tagRepo.findByTagName(tagName) == null) {
+			Tag tag = new Tag(tagName);
+			tag.addAlbum(album);
+			tag = tagRepo.save(tag);
+			album.addTag(tag);
+			albumRepo.save(album);
+		}
+
+		else {
+			Tag tag = tagRepo.findByTagName(tagName);
+			// if this tag is already applied to this song
+			if (albumRepo.findById(albumId).get().getTags().contains(tag)) {
+				return;
+			} else {
+				tag.addAlbum(album);
+				tag = tagRepo.save(tag);
+				album.addTag(tag);
+				albumRepo.save(album);
+			}
+		}
+
+	}
+
+	// ADD TAGS - songs
+	@PostMapping("api/{artistId}/albums/{albumId}/songs/{songId}/tags/add")
+	public void addTagOnASong(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		Album album = albumRepo.findById(albumId).get();
+		Song song = songRepo.findById(songId).get();
+		JSONObject json = new JSONObject(content);
+		String tagName = json.getString("tagName");
+
+		if (tagRepo.findByTagName(tagName) == null) {
+			Tag tag = new Tag(tagName);
+			tag.addSong(song);
+			tag = tagRepo.save(tag);
+			song.addTag(tag);
+			songRepo.save(song);
+		}
+
+		else {
+			Tag tag = tagRepo.findByTagName(tagName);
+			// if this tag is already applied to this song
+			if (songRepo.findById(songId).get().getTags().contains(tag)) {
+				return;
+			} else {
+				tag.addSong(song);
+				tag = tagRepo.save(tag);
+				song.addTag(tag);
+				songRepo.save(song);
+			}
+		}
+
+	}
+
+	// ADD RATING - artist
+	@PostMapping("/api/{artistId}/rating/add")
+	public void increaseArtistRating(@PathVariable(value = "artistId") Long artistId, @RequestBody String content)
+			throws JSONException {
+		Artist artist = artistRepo.findById(artistId).get();
+		artist.setRating(artist.getRating() + 1);
+		artistRepo.save(artist);
+	}
+	
+
+	//ADD RATINGS - album
+	@PostMapping("/api/{artistId}/albums/{albumId}/rating/add")
+	public void increaseAlbumRating(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @RequestBody String content) throws JSONException {
+		Album album = albumRepo.findById(albumId).get();
+		album.setRating(album.getRating() + 1);
+		albumRepo.save(album);
+	}
+	
+	
+	//ADD RATING - song
+	@PostMapping("/api/{artistId}/albums/{albumId}/songs/{songId}/rating/add")
+	public void increaseSongRating(@PathVariable(value = "artistId") Long artistId,
+			@PathVariable(value = "albumId") Long albumId, @PathVariable(value = "songId") Long songId,
+			@RequestBody String content) throws JSONException {
+		Song song = songRepo.findById(songId).get();
+		song.setRating(song.getRating() + 1);
+		songRepo.save(song);
 	}
 
 }

@@ -1,0 +1,32 @@
+.album-link {
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+}
+	.album-link:hover {
+			background-color: rgba(1,1,1,0.8);
+
+		}
+
+
+.eachAlbumSection {
+	border: 1px solid var(--grey);
+}
+	.eachAlbumSection h1 {
+		border: 1px solid var(--grey);
+	}
+		.eachAlbumSection h1:hover {
+			background-color: rgba(1,1,1,0.8);
+		}
+
+
+#albums {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 1rem;
+}
+@media only screen and (min-width: 800px) {
+	#albums {
+		grid-template-columns: 1fr 1fr; 
+	}
+}

@@ -46,6 +46,9 @@ function getArtists() {
 function showArtists(allArtists) {
 	clearSections()
 	allArtists.forEach(artist => {
+		const eachArtistSection = document.createElement('section')
+		eachArtistSection.classList.add('eachArtistSection')
+		artistSection.appendChild(eachArtistSection)
 		const artistHeader = document.createElement('h1')
 		artistHeader.innerText = artist.name
 		const artistSubheaderAge = document.createElement('p')
@@ -53,36 +56,98 @@ function showArtists(allArtists) {
 		const artistSubheaderHome = document.createElement('p')
 		artistSubheaderHome.innerText = `Hometown: ${artist.home}`
 		artistHeader.addEventListener('click', function() {getAlbums(artist.id)})
-		artistSection.appendChild(artistHeader)
-		artistSection.appendChild(artistSubheaderAge)
-		artistSection.appendChild(artistSubheaderHome)
+		eachArtistSection.appendChild(artistHeader)
+		eachArtistSection.appendChild(artistSubheaderAge)
+		eachArtistSection.appendChild(artistSubheaderHome)
+
+		// show ratings
+		const ratingSection = document.createElement('section')
+		eachArtistSection.appendChild(ratingSection)
+		const ratingHTML = `<p>Rating: ${artist.rating}</p>`
+		ratingSection.innerHTML += ratingHTML
+		//add rating
+		const ratingFields = `
+			<button class="rating-submit-${artist.id}">&#8679;</button>`
+		ratingSection.innerHTML += ratingFields
+		const increaseRatingButton = document.querySelector(`.rating-submit-${artist.id}`)
+		increaseRatingButton.addEventListener('click', () => {
+			const newRating = (artist.rating + 1)
+			fetch(`/api/${artist.id}/rating/add`, {
+				method: `POST`,
+				body: newRating
+			})
+			.then()
+			.then(data =>{
+				getArtists()
+			})
+			getArtists()
+		})
 		
-		const tagSectionArtist = document.createElement('section')
-		tagSectionArtist.classList.add("artistTag")
-		const tagButtonArtist = document.createElement('button')
-		tagButtonArtist.classList.add("artistButton")
-		tagButtonArtist.innerText = "Submit"
-		const tagInputArtist = document.createElement('input')
-		tagInputArtist.type = "text"
-		tagInputArtist.name="artistTag"
-		const tagInputArtistHidden = document.createElement('input')
-		tagInputArtistHidden.type = "hidden"
-		tagInputArtistHidden.value = artist.id
-		tagInputArtist.name="artistTagHidden";
+		//show tags
+		const tagSection = document.createElement('section')
+		tagSection.classList.add(`tags-${artist.id}`)
+		eachArtistSection.appendChild(tagSection)
+		showTags(`/api/${artist.id}/tags`, `.tags-${artist.id}`)
+		const tagSection2 = document.createElement('section')
+		const tagFields = `
+			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
+			<button class="tag-submit-${artist.id}">Submit</button>
+		`
+		tagSection2.innerHTML += tagFields
+		eachArtistSection.appendChild(tagSection2)
+		const tagButton = document.querySelector(`.tag-submit-${artist.id}`)
+		tagButton.addEventListener('click', () =>{
+			makeTags(`api/${artist.id}/tags/add` ,
+					`/api/${artist.id}/tags`, `.tags-${artist.id}`, tagButton)
+		})
+
+		//show comments
+		const section = document.createElement('section')
+		section.classList.add(`comments-${artist.id}`)
+		section.classList.add('comments-list')
+		eachArtistSection.appendChild(section)
+		showComments(`/api/${artist.id}/comments`, `.comments-${artist.id}`)
+		const commentSection = document.createElement('section')
 		
-		const tags = getTags(`/api/artists/${artist.id}/tags`)
-		console.log('this is what we feed to getTagHtml()')
-		console.log(tags)
-		const tagHtml = getTagHtml(tags)
-		tagSectionArtist.appendChild(tagHtml)
-		
-		tagSectionArtist.appendChild(tagInputArtist)
-		tagSectionArtist.appendChild(tagInputArtistHidden)
-		tagSectionArtist.appendChild(tagButtonArtist)
-		
-		artistSection.appendChild(tagSectionArtist)
+		const commentFields = `
+			<h3>Comment:</h3>
+			<label> Username: <input id="commentUsername" type="text" name="commentUsername"/> </label>
+			<label> Comment: <input id="commentContent" type="text" name="commentContent"/> </label>
+			<button class="comment-submit-${artist.id}">Submit</button>
+		`
+		commentSection.innerHTML += commentFields
+		eachArtistSection.appendChild(commentSection)
+		const submitButton = document.querySelector(`.comment-submit-${artist.id}`)
+		submitButton.addEventListener('click', () => {
+			makeComments(`/api/${artist.id}/comments/add`,
+					`/api/${artist.id}/comments`, `.comments-${artist.id}`, submitButton)
+		})	
+	}) //end of allArtists.forEach
+	//Display add an artist section
+	const addArtistHtml = `
+		<section class="addArtist">
+			<h1>Add Artist:</h1>
+			<label> Name: <input id="name" type="text" name="name"/> </label>
+			<label> Image: <input id="image" type="text" name="image"/> </label>
+			<label> Age: <input id="age" type="text" name="age"/> </label>
+			<label> Home: <input id="home" type="text" name="home"/> </label>
+			<button class="artistSubmit">Submit</button>
+		</section>`
+	const artistAdditionSection = document.createElement('section')
+	artistSection.appendChild(artistAdditionSection)
+	artistAdditionSection.innerHTML += addArtistHtml
+	const artistSubmitButton = artistSection.querySelector('.artistSubmit')
+	const artistNameField = artistSection.querySelector('#name')
+	const artistImageField = artistSection.querySelector('#image')
+	const artistAgeField = artistSection.querySelector('#age')
+	const artistHomeField = artistSection.querySelector('#home')
+
+	artistSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/artist/add`
+		addANewArtist(path, artistNameField, artistImageField, artistAgeField, artistHomeField)
 	})
 }
+
 
 
 
@@ -100,6 +165,7 @@ function getAlbums(artistId) {
 }
 
 
+
 function showAlbums(allAlbums, artistId){
 	clearSections()
 	//first make a button to go back to artists view
@@ -109,15 +175,105 @@ function showAlbums(allAlbums, artistId){
 	})
 	//then...
 	allAlbums.forEach(album => {
-		const albumHeader = document.createElement('h3')
+		const eachAlbumSection = document.createElement('section')
+		eachAlbumSection.classList.add('eachAlbumSection')
+		albumSection.appendChild(eachAlbumSection)
+		const albumHeader = document.createElement('h2')
+		albumHeader.classList.add('album-link')
 		albumHeader.innerText = album.name
 		albumHeader.innerHTML += `<img src='/images/${album.image}'></img>`
 		albumHeader.addEventListener('click', function(){
 			getSongs(album.id, artistId)
 		})
-		albumSection.appendChild(albumHeader)
+		eachAlbumSection.appendChild(albumHeader)
+
+		// show ratings
+		const ratingSection = document.createElement('section')
+		eachAlbumSection.appendChild(ratingSection)
+		const ratingHTML = `<p>Rating: ${album.rating}</p>`
+		ratingSection.innerHTML += ratingHTML
+		//add rating
+		const ratingFields = `
+			<button class="rating-submit-${album.id}">&#8679;</button>`
+		//ADD THIS TO NOT THE HEADER 
+		ratingSection.innerHTML += ratingFields
+		const increaseRatingButton = document.querySelector(`.rating-submit-${album.id}`)
+		increaseRatingButton.addEventListener('click', () => {
+			const newRating = (album.rating + 1)
+			fetch(`/api/${artistId}/albums/${album.id}/rating/add`, {
+				method: `POST`,
+				body: newRating
+			})
+			.then()
+			.then(data =>{
+				getAlbums(artistId)
+
+			})
+			getAlbums(artistId)
+		})
+		
+		//show tags
+		const tagSection = document.createElement('section')
+		tagSection.classList.add(`tags-${album.id}`)
+		eachAlbumSection.appendChild(tagSection)
+		showTags(`/api/${artistId}/albums/${album.id}/tags`, `.tags-${album.id}`)
+		const tagSection2 = document.createElement('section')
+		const tagFields = `
+			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
+			<button class="tag-submit-${album.id}">Submit</button>
+		`
+		tagSection2.innerHTML += tagFields
+		eachAlbumSection.appendChild(tagSection2)
+		const tagButton = document.querySelector(`.tag-submit-${album.id}`)
+		tagButton.addEventListener('click', () =>{
+			makeTags(`api/${artistId}/albums/${album.id}/tags/add` ,
+					`/api/${artistId}/albums/${album.id}/tags`, `.tags-${album.id}`, tagButton)
+		})
+
+		//show comments
+		const section = document.createElement('section')
+		section.classList.add(`comments-${album.id}`)
+		section.classList.add('comments-list')
+		eachAlbumSection.appendChild(section)
+		showComments(`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`)
+		const commentSection = document.createElement('section')
+		
+		const commentFields = `
+			<h3>Comment</h3>
+			<label>Username: <input id="commentUsername" type="text" name="commentUsername"/> </label>
+			<label>Comment: <input id="commentContent" type="text" name="commentContent"/> </label>
+			<button class="comment-submit-${album.id}">Submit</button>
+		`
+		commentSection.innerHTML += commentFields
+		eachAlbumSection.appendChild(commentSection)
+		const submitButton = document.querySelector(`.comment-submit-${album.id}`)
+		submitButton.addEventListener('click', () => {
+			makeComments(`/api/${artistId}/albums/${album.id}/comments/add`,
+					`/api/${artistId}/albums/${album.id}/comments`, `.comments-${album.id}`, submitButton)
+		})	
+
+	}) //end of albums.forEach
+	//Display add an album section
+	const addAlbumHtml = `
+		<section class="addAlbum">
+			<h1>Add Album:</h1>
+			<label> Album Name: <input id="name" type="text" name="name"/> </label>
+			<label> Image: <input id="image" type="text" name="image"/> </label>
+			<button class="albumSubmit">Submit</button>
+		</section>`
+	const albumAdditionSection = document.createElement('section')
+	albumSection.appendChild(albumAdditionSection)
+	albumAdditionSection.innerHTML += addAlbumHtml
+	const albumSubmitButton = albumSection.querySelector('.albumSubmit')
+	const albumNameField = albumSection.querySelector('#name')
+	const albumImageField = albumSection.querySelector('#image')
+	albumSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/${artistId}/albums/add`
+		addANewAlbum(albumNameField, albumImageField, path, allAlbums, artistId)
 	})
 }
+
+
 
 
 function getSongs(albumId, artistId){
@@ -125,7 +281,7 @@ function getSongs(albumId, artistId){
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200){
 			const allSongs = JSON.parse(this.responseText)
-			showSongs(allSongs, artistId)
+			showSongs(allSongs, artistId, albumId)
 		}
 	}
 	xhttp.open("GET", `/api/${artistId}/albums/${albumId}/songs`, true)
@@ -133,7 +289,7 @@ function getSongs(albumId, artistId){
 }
 
 
-function showSongs(allSongs, artistId){
+function showSongs(allSongs, artistId, albumId){
 	clearSections()
 	albumSection.innerHTML = `<button id='backToAlbums'>back to albums</button>`
 	document.querySelector('#backToAlbums').addEventListener('click', ()=>{
@@ -141,160 +297,281 @@ function showSongs(allSongs, artistId){
 		getAlbums(artistId)
 	})
 	allSongs.forEach(song => {
-		const songHeader = document.createElement('h4')
+		const eachSongSection = document.createElement('section')
+		eachSongSection.classList.add('eachSongSection')
+		songSection.appendChild(eachSongSection)
+		const songHeader = document.createElement('h2')
 		songHeader.innerText = `${song.name} - ${song.length}`
-//add an event listener here so that songs can display their length, etc...
-		songSection.appendChild(songHeader)
+		//add an event listener here so that songs can display their length, etc...
+		eachSongSection.appendChild(songHeader)
+		
+		//show rating
+		const ratingSection = document.createElement('section')
+		eachSongSection.appendChild(ratingSection)
+		const ratingHTML = `<p>Rating: ${song.rating}</p>`
+		ratingSection.innerHTML += ratingHTML
+		//add ratings
+		const ratingFields = `
+			<button class="rating-submit-${song.id}">&#8679;</button>`
+		ratingSection.innerHTML += ratingFields
+		const increaseRatingButton = document.querySelector(`.rating-submit-${song.id}`)
+		increaseRatingButton.addEventListener('click', () => {
+			const newRating = (song.rating + 1)
+			fetch(`/api/${artistId}/albums/${albumId}/songs/${song.id}/rating/add`, {
+				method: `POST`,
+				body: newRating
+			})
+			.then()
+			.then(data =>{
+				getSongs(albumId, artistId)
+			})
+			getSongs(albumId, artistId)
+		})
+
+		//show tags SONGS ONLY
+		const tagSection = document.createElement('section')
+		tagSection.classList.add(`tags-${song.id}`)
+		eachSongSection.appendChild(tagSection)
+		showTags(`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`)
+		const tagSection2 = document.createElement('section')
+		const tagFields = `
+			<label> Add Tag: <input id="tagName" type="text" name="tagName"/> </label>
+			<button class="tag-submit-${song.id}">Submit</button>
+		`
+		tagSection2.innerHTML += tagFields
+		eachSongSection.appendChild(tagSection2)
+		const tagButton = document.querySelector(`.tag-submit-${song.id}`)
+		tagButton.addEventListener('click', () =>{
+			makeTags(`api/${artistId}/albums/${albumId}/songs/${song.id}/tags/add` ,
+					`/api/${artistId}/albums/${albumId}/songs/${song.id}/tags`, `.tags-${song.id}`, tagButton)
+		})		
+	
+		//show comments SONGS ONLY
+		const section = document.createElement('section')
+		section.classList.add(`comments-${song.id}`)
+		section.classList.add('comments-list')
+		eachSongSection.appendChild(section)
+		showComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`)
+		const commentSection = document.createElement('section')
+		
+		const commentFields = `
+			<h3>Comment:</h3>
+			<label>Username: <input id="commentUsername" type="text" name="commentUsername"/> </label>
+			<label>Comment: <input id="commentContent" type="text" name="commentContent"/> </label>
+			<button class="comment-submit-${song.id}">Submit</button>
+		`
+		commentSection.innerHTML += commentFields
+		eachSongSection.appendChild(commentSection)
+		const submitButton = document.querySelector(`.comment-submit-${song.id}`)
+		submitButton.addEventListener('click', () => {
+			makeComments(`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments/add`,
+					`/api/${artistId}/albums/${albumId}/songs/${song.id}/comments`, `.comments-${song.id}`, submitButton)
+		})	
+
+		
+	}) //end of songs.forEach
+
+	//Display add a song section
+	const addSongHtml = `
+		<section class="addSong">
+			<h1>Add Song:</h1>
+			<label> Song Name: <input id="songName" type="text" name="songName"/> </label>
+			<label> Song Length: <input id="songLength" type="text" name="songLength"/> </label>
+			<label> Song Link: <input id="songLink" type="text" name="songLink"/> </label>
+			<button class="songSubmit">Submit</button>
+		</section>`
+	const songAdditionSection = document.createElement('section')
+	songSection.appendChild(songAdditionSection)
+	songAdditionSection.innerHTML += addSongHtml
+	const songSubmitButton = songSection.querySelector('.songSubmit')
+	const songNameField = songSection.querySelector('#songName')
+	const songLengthField = songSection.querySelector('#songLength')
+	const songLinkField = songSection.querySelector('#songLink')
+	songSubmitButton.addEventListener('click', ()=>{
+		const path = `/api/${artistId}/albums/${albumId}/songs/add`
+		addNewSong(songNameField, songLengthField, songLinkField, path, allSongs, artistId, albumId)
 	})
+
+
+	
 }
+
 
 
 
 ////////////////////  ADDING NEW DATA //////////////////////////////////////
 
-artistSubmitButton.addEventListener('click', ()=>{
-	addANewArtist()
-})
 
-albumSubmitButton.addEventListener('click', () => {
-	addANewAlbum()
-})
-
-songSubmitButton.addEventListener('click', ()=>{
-	addNewSong()
-})
-
-
-function addANewArtist(){
+function addANewArtist(path, artistNameField, artistImageField, artistAgeField, artistHomeField){
 	const xhttp = new XMLHttpRequest();
-	xhttp.open("POST", `/api/artist/add`, true); //this is what this.responseText is
+	xhttp.open("POST", path, true); //this is what this.responseText is
 	const artist = JSON.stringify({
-		name: artistName.value,
-		image: artistImage.value,
-		age: artistAge.value,
-		home: artistHome.value,
+		name: artistNameField.value,
+		image: artistImageField.value,
+		age: artistAgeField.value,
+		home: artistHomeField.value,
 	})
 	xhttp.send(artist)
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			artistName.value=''
-			artistImage.value=''
-			artistAge.value=''
-			artistHome.value = ''
+			artistNameField.value=''
+			artistImageField.value=''
+			artistAgeField.value=''
+			artistHomeField.value = ''
+			getArtists()
 		}
 	}
 }
 
 
-function addANewAlbum(){
+function addANewAlbum(albumNameField, albumImageField, path, allAlbums, artistId){
 	const xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			albumName.value = ''
-			albumImage.value = ''
+			albumNameField.value = ''
+			albumImageField.value = ''
+			getAlbums(artistId)
 		}
 	}
-	xhttp.open("POST", `/api/artists/1/albums/add`, true); //this is what "this.responseText" is
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
 	const content = JSON.stringify({
-		name: albumName.value,
-		image: albumImage.value,
+		name: albumNameField.value,
+		image: albumImageField.value,
 	})
 	xhttp.send(content)
 }
 
 
-function addNewSong() {
+function addNewSong(songNameField, songLengthField, songLinkField, path, allSongs, artistId, albumId) {
 	const xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			songName.value=''
-			songLink.value=''
-			songLength.value=''
+			songNameField.value=''
+			songLinkField.value=''
+			songLengthField.value=''
+			getSongs(albumId, artistId)
 		}
 	}
-	xhttp.open("POST", `/api/artists/1/albums/2/songs/add`, true); //1 is Captain Carrion and the Buzzards, 2 is their Album
+	xhttp.open("POST", path, true); //1 is Captain Carrion and the Buzzards, 2 is their Album
 	const song = JSON.stringify({
-		name: songName.value,
-		length: songLength.value,
-		link: songLink.value,
+		name: songNameField.value,
+		length: songLengthField.value,
+		link: songLinkField.value,
 	})
 	xhttp.send(song)
 }
 
-////////////////////ADDING AND REMOVING TAGS //////////////////////////////////////
-//const addTagButton = document.querySelector(the button we need to select);
-//const p = document.querySelector(the selection we want to change);
-//const original = p.innerHTML; (Setting this to empty at begining)
-//const input = document.querySelector('.taggyTag'); (input field name)
-//reviewId = window.location.pathname.split('/')[2];
-
-//addTag(input, reviewId, addTagButton, p, original);
-
-//fetch(`/api/reviews/${window.location.pathname.split('/')[2]}`, {
-// 				method: 'get'
-// 			})
-// 			.then(res => res.json())
-// 			.then(data => {
-// 				data.forEach(tag =>{
-// 					addTagHtml(tag, p, reviewId)
-// 					})
-// 				addDeleteButtonsEvent(p, reviewId);
-// 				})
-
-function getTags(path){
-	fetch(path)
-	.then(res => 
-		res.json()
-	)
-	.then(tags => {
-			return tags
-			
+////////////////////ADDING AND REMOVING Comments //////////////////////////////////////
+//show comments
+function showComments(path, className){ 
+const section = document.querySelector(className)
+section.innerHTML = ""
+fetch(path, {
+		method: 'get'
 	})
-	.catch(console.log("Ooooooh fuck, your fetch didn't then. It's hasn't then-ed."))	
-}
-
-
-function getTagHtml(tags) {
-	console.log(tags + 'this is inside the getTagHtml function')
-	let ul = document.createElement('ul')
-	tags.forEach(tag => {
-		ul.innerHTML += `<li>${tag.tagName}</li>`
+	.then(res => res.json())
+	.then(data => {
+		data.forEach(comment =>{
+			section.innerHTML += `
+			<p>UserName: ${comment.username}</p>
+			<p>${comment.content}</p>
+			`
+		})
 	})
-	return ul
-}
- 				
-function addTag(input, reviewId, addTagButton, p, original) {
 	
-	addTagButton.addEventListener('click', function() {
-		
-		const xhttp = new XMLHttpRequest()
-		
-		// Sets behavior for when the AJAX request is complete
-		xhttp.onreadystatechange = function() {
-			
-			// Checks the ready state and http status code
-			if (this.readyState == 4 && this.status == 200) {
-				
-				//Resets the original p element
-				p.innerHTML = original;
-
-				JSON.parse(this.responseText).forEach(tag => {
-					addTagHtml(tag, p, reviewId)
-				})
-				addDeleteButtonsEvent(p, reviewId)
-			}
-		}
-		xhttp.open('POST', `/api/reviews/${window.location.pathname.split('/')[2]}/tags/add`, true)
-		const body = JSON.stringify({
-					tagName: input.value
-				})
-		xhttp.send(body)
-	})
 }
 
-//function addTagHtml(tag, p) {
-//
-//	p.innerHTML = p.innerHTML + `
-//		<a href = "/tag/${tag.id}" class="a${tag.id}">${tag.tagName}</a> <button class="delete" data-num="${tag.id}">X</button>
-//	`;
-//}
+//make comments
+function makeComments(path, path2, section, submitButton){
+	const parentSection = submitButton.parentNode
+	const commentUsername = parentSection.querySelector('#commentUsername')
+	const commentContent = parentSection.querySelector('#commentContent')
+	
+	const xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			commentUsername.value = ''
+			commentContent.value = ''
+			showComments(path2, section)
+		}
+	}
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
+	const content = JSON.stringify({
+		name: commentUsername.value,
+		content: commentContent.value,
+	})
+		
+	xhttp.send(content)
+	//showcommentshere
+	
+}
+
+
+
+////////////////////ADDING AND REMOVING Tags //////////////////////////////////////
+function showTags(path, className){ 
+const section = document.querySelector(className)
+section.innerHTML = ""
+fetch(path, {
+		method: 'get'
+	})
+	.then(res => res.json())
+	.then(data => {
+		data.forEach(tag =>{
+//			const section = document.querySelector(className) //thiiiiiiiiis was giving us the duplicate tags
+			section.innerHTML += `
+			<p class="tag">Tag: ${tag.tagName}</p>
+			`
+			section.querySelector('.tag').addEventListener('click', function(){
+				showTagView(tag)
+			})
+		})
+	})
+	
+}
+
+//make tags
+function makeTags(path, path2, section, button){
+	const parentElement = button.parentNode
+	const tagName = parentElement.querySelector('#tagName')
+	const xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			tagName.value = ''
+			showTags(path2, section)
+		}
+	}
+	xhttp.open("POST", path, true); //this is what "this.responseText" is
+	const content = JSON.stringify({
+		tagName: tagName.value,
+	})
+		
+	xhttp.send(content)
+	//showcommentshere
+	
+}
+
+//////////Show The Elemenets that belong to a tag //////////////////////////////////
+function showTagView(tag){
+	clearSections()
+	const list = document.createElement('ul')
+	console.log(tag.songs)
+	tag.artists.forEach(artist =>{
+		const li = `
+		<li>${artist.name}</li>`
+		list.innerHTML += li
+	})
+	tag.albums.forEach(album =>{
+		const li = `
+		<li>${album.name}</li>`
+		list.innerHTML += li
+	})
+	tag.songs.forEach(song =>{
+		const li = `
+		<li>${song.name}</li>`
+		list.innerHTML += li
+	})
+	artistSection.appendChild(list)
+	console.log(list.innerHTML)
+}
+
