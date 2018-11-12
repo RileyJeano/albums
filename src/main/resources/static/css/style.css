@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+:root {
+
+	--white: #D7D3D2;
+	--color-1: #736433;
+	--color-2: #A48242;
+	--light-grey: #626E6E;
+	--dark-grey: #232420;
+
+}
+
+*{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+
+	line-height: 1.618;
+	list-style: none;
+	font-family: 'Open Sans', sans-serif;
+	text-decoration: none;
+
+}
