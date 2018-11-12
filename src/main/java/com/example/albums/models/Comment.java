@@ -66,7 +66,7 @@ public class Comment {
 		this.song = song;
 	}
 
-	public void addAritst(Artist arist) {
+	public void addAritst(Artist artist) {
 		this.artist = artist;
 	}
 
