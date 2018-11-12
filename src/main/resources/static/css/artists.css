@@ -1,8 +1,8 @@
 .eachArtistSection {
-	border: 1px solid var(--light);
+	border: 1px solid var(--grey);
 }
 	.eachArtistSection h1 {
-		border: 1px solid var(--light);
+		border: 1px solid var(--grey);
 		cursor: pointer;
 	}
 		.eachArtistSection h1:hover {

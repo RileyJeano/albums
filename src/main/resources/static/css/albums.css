@@ -10,10 +10,10 @@
 
 
 .eachAlbumSection {
-	border: 1px solid var(--light);
+	border: 1px solid var(--grey);
 }
 	.eachAlbumSection h1 {
-		border: 1px solid var(--light);
+		border: 1px solid var(--grey);
 	}
 		.eachAlbumSection h1:hover {
 			background-color: rgba(1,1,1,0.8);

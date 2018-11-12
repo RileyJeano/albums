@@ -1,5 +1,11 @@
 .eachSongSection {
-	border: 1px solid var(--light);
+	border: 1px solid var(--grey);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 1rem;
+}
+
+#songs {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-gap: 1rem;

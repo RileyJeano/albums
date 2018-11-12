@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 :root {
 
-	--light: #D7D3D2;
-	--color-1: #736433;
-	--color-2: #A48242;
-	--grey: #626E6E;
-	--dark: #232420;
+	--light: #D0D4D7;
+	--color-1: #BE9363;
+	--color-2: #BEA384;
+	--grey: #695755;
+	--dark: #2E3E3D;
 
 	background-color: var(--dark);
 	color: var(--light);
@@ -23,6 +23,28 @@
 	text-decoration: none;
 
 }
+
+button {
+	background-color: var(--light);
+	border: none;
+	cursor: pointer;
+}
+
+header {
+	font-weight: bold;
+	display: flex;
+	color: var(--color-1);
+}
+	.header-arrows {
+		color: var(--color-2);
+	}
+
+input {
+	background-color: var(--light);
+	border: none;
+	outline: none;
+}
+
 
 .comments-list {
 	border: 1px solid var(--light);
