@@ -1,0 +1,20 @@
+.eachArtistSection {
+	border: 1px solid var(--light);
+}
+	.eachArtistSection h1 {
+		border: 1px solid var(--light);
+	}
+		.eachArtistSection h1:hover {
+			background-color: rgba(1,1,1,0.8);
+		}
+
+#artists {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 1rem;
+}
+@media only screen and (min-width: 800px) {
+	#artists {
+		grid-template-columns: 1fr 1fr; 
+	}
+}

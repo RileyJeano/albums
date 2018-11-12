@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 :root {
 
-	--white: #D7D3D2;
+	--light: #D7D3D2;
 	--color-1: #736433;
 	--color-2: #A48242;
-	--light-grey: #626E6E;
-	--dark-grey: #232420;
+	--grey: #626E6E;
+	--dark: #232420;
+
+	background-color: var(--dark);
+	color: var(--light);
 
 }
 
